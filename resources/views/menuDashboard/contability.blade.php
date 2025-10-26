@@ -3,16 +3,21 @@
     <div class="form-group d-flex">
         <div>
 
+            
+            @if ($rol !== "usuario")
+            
             <label>Fecha:</label>
             <div class="input-group date" data-target-input="nearest">
                 <input type="date" class="form-control" data-target="#reservationdate" id="fecha_rango">
                 <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                 </div>
-
                 <button onclick="getForRangeGuests('{{ route('egressDate') }}')" class="btn btn-primary ml-2"
                     style=""><i class="fa-regular fa-calendar-days"></i>&nbsp;&nbsp;Buscar egresos por
                     fecha</button>
+                    
+                @endif
+
             </div>
         </div>
     </div>

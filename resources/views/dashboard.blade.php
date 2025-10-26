@@ -220,7 +220,6 @@
 
 
                         @if ($array['rol'] === 'usuario')
-
                             <li class="nav-item">
                                 <a class="nav-link menu_dashboard"
                                     onclick="getShowOrdersKitchen('{{ route('showKitchen') }}')" type="button">
@@ -348,12 +347,11 @@
 
                         @if ($array['rol'] === 'super admin')
                             <li class="nav-item">
-                                <a class="nav-link menu_dashboard"
-                                    onclick="getShowAdminUsers('{{ route('getShowUsers') }}')" type="button">
-                                    <i class="fa-solid fa-users"></i>&nbsp;&nbsp;
+                                <a class="nav-link" type="button"
+                                    onclick="getShowChangePassword('{{ route('changePasswordShow') }}')">
+                                    <i class="fa-solid fa-key"></i>&nbsp;&nbsp;
                                     <p>
-                                        Administrador Usuarios
-
+                                        Cambiar contraseña
                                     </p>
                                 </a>
                             </li>
@@ -369,6 +367,51 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link menu_dashboard"
+                                    onclick="getShowAdminUsers('{{ route('getShowUsers') }}')" type="button">
+                                    <i class="fa-solid fa-users"></i>&nbsp;&nbsp;
+                                    <p>
+                                        Administrador Usuarios
+
+                                    </p>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link menu_dashboard"
+                                    onclick="register_user('{{ route('registroUser') }}')" type="button"
+                                    id="register_nav">
+                                    <i class="fa-solid fa-user-plus"></i>&nbsp;&nbsp;
+                                    <p>
+                                        Registrar Usuarios
+                                    </p>
+                                </a>
+                            </li>
+
+
+                            <li class="nav-item">
+                                <a class="nav-link menu_dashboard" type="button"
+                                    onclick="getShowAssists('{{ route('getShowReportAssists') }}')">
+                                    <i class="fa-solid fa-person-shelter"></i>&nbsp;&nbsp;
+                                    <p>
+                                        Reporte de asistencias
+                                    </p>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link menu_dashboard"
+                                    onclick="getShowSchedules('{{ route('getShowSchedule') }}')" type="button"
+                                    id="register_nav">
+                                    <i class="fa-solid fa-house-circle-check"></i>&nbsp;&nbsp;
+                                    <p>
+                                        Horarios
+                                    </p>
+                                </a>
+                            </li>
+
+
+                            <li class="nav-item">
+                                <a class="nav-link menu_dashboard"
                                     onclick="getShowPayroll('{{ route('getshowpayroll') }}')" type="button"
                                     id="payroll_nav">
                                     <i class="fa-solid fa-dollar-sign"></i>&nbsp;&nbsp;
@@ -377,7 +420,6 @@
                                     </p>
                                 </a>
                             </li>
-
 
 
                             <li class="nav-item">
@@ -390,7 +432,6 @@
                                 </a>
                             </li>
 
-
                             <li class="nav-item">
                                 <a class="nav-link menu_dashboard"
                                     onclick="createProduct('{{ route('createProduct') }}')" type="button"
@@ -401,7 +442,6 @@
                                     </p>
                                 </a>
                             </li>
-
 
                             <li class="nav-item">
                                 <a class="nav-link menu_dashboard"
@@ -419,14 +459,27 @@
 
                             <li class="nav-item">
                                 <a class="nav-link menu_dashboard"
-                                    onclick="getShowAdminUsers('{{ route('getShowUsers') }}')" type="button">
-                                    <i class="fa-solid fa-users"></i>&nbsp;&nbsp;
+                                    onclick="getShowStore('{{ route('getShowStore') }}')" type="button"
+                                    id="payroll_nav">
+                                    <i class="fa-solid fa-store"></i>&nbsp;&nbsp;
                                     <p>
-                                        Administrador Usuarios
-
+                                        vender
                                     </p>
                                 </a>
                             </li>
+
+
+                            <li class="nav-item">
+                                <a class="nav-link menu_dashboard"
+                                    onclick="getShowHistorySell('{{ route('getShowHistorySell') }}')" type="button"
+                                    id="payroll_nav">
+                                    <i class="fa-solid fa-list"></i>&nbsp;&nbsp;
+                                    <p>
+                                        Historial ventas
+                                    </p>
+                                </a>
+                            </li>
+
 
                             <li class="nav-item">
                                 <a class="nav-link menu_dashboard"
@@ -435,6 +488,39 @@
                                     <i class="fa-solid fa-utensils"></i>&nbsp;&nbsp;
                                     <p>
                                         Alimentación empleados
+                                    </p>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link menu_dashboard"
+                                    onclick="getShowGuest('{{ route('getShowGuest') }}')" type="button"
+                                    id="payroll_nav">
+                                    <i class="fa-solid fa-hotel"></i>&nbsp;&nbsp;
+                                    <p>
+                                        Hospedaje
+                                    </p>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link menu_dashboard"
+                                    onclick="getShowContability('{{ route('contability') }}')" type="button"
+                                    id="payroll_nav">
+                                    <i class="fa-solid fa-calculator"></i>&nbsp;&nbsp;
+                                    <p>
+                                        Contabilidad
+                                    </p>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link menu_dashboard"
+                                    onclick="getShowTransfers('{{ route('getShowTransfers') }}')" type="button"
+                                    id="payroll_nav">
+                                    <i class="fa-solid fa-arrow-right-arrow-left"></i>&nbsp;&nbsp;
+                                    <p>
+                                        Transferencias
                                     </p>
                                 </a>
                             </li>
@@ -504,58 +590,59 @@
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link menu_dashboard" onclick="getShowStore('{{ route('getShowStore') }}')"
-                                    type="button" id="payroll_nav">
+                                <a class="nav-link menu_dashboard"
+                                    onclick="getShowStore('{{ route('getShowStore') }}')" type="button"
+                                    id="payroll_nav">
                                     <i class="fa-solid fa-store"></i>&nbsp;&nbsp;
                                     <p>
                                         vender
                                     </p>
                                 </a>
                             </li>
-                                                    <li class="nav-item">
-                            <a class="nav-link menu_dashboard"
-                                onclick="getShowHistorySell('{{ route('getShowHistorySell') }}')" type="button"
-                                id="payroll_nav">
-                                <i class="fa-solid fa-list"></i>&nbsp;&nbsp;
-                                <p>
-                                    Historial ventas
-                                </p>
-                            </a>
-                        </li>
+                            <li class="nav-item">
+                                <a class="nav-link menu_dashboard"
+                                    onclick="getShowHistorySell('{{ route('getShowHistorySell') }}')" type="button"
+                                    id="payroll_nav">
+                                    <i class="fa-solid fa-list"></i>&nbsp;&nbsp;
+                                    <p>
+                                        Historial ventas
+                                    </p>
+                                </a>
+                            </li>
 
-                        
-                        <li class="nav-item">
-                            <a class="nav-link menu_dashboard" onclick="getShowGuest('{{ route('getShowGuest') }}')"
-                                type="button" id="payroll_nav">
-                                <i class="fa-solid fa-hotel"></i>&nbsp;&nbsp;
-                                <p>
-                                    Hospedaje
-                                </p>
-                            </a>
-                        </li>
 
-                                                <li class="nav-item">
-                            <a class="nav-link menu_dashboard"
-                                onclick="getShowContability('{{ route('contability') }}')" type="button"
-                                id="payroll_nav">
-                                <i class="fa-solid fa-calculator"></i>&nbsp;&nbsp;
-                                <p>
-                                    Contabilidad
-                                </p>
-                            </a>
-                        </li>
+                            <li class="nav-item">
+                                <a class="nav-link menu_dashboard"
+                                    onclick="getShowGuest('{{ route('getShowGuest') }}')" type="button"
+                                    id="payroll_nav">
+                                    <i class="fa-solid fa-hotel"></i>&nbsp;&nbsp;
+                                    <p>
+                                        Hospedaje
+                                    </p>
+                                </a>
+                            </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link menu_dashboard"
-                                onclick="getShowTransfers('{{ route('getShowTransfers') }}')" type="button"
-                                id="payroll_nav">
-                                <i class="fa-solid fa-arrow-right-arrow-left"></i>&nbsp;&nbsp;
-                                <p>
-                                    Transferencias
-                                </p>
-                            </a>
-                        </li>
+                            <li class="nav-item">
+                                <a class="nav-link menu_dashboard"
+                                    onclick="getShowContability('{{ route('contability') }}')" type="button"
+                                    id="payroll_nav">
+                                    <i class="fa-solid fa-calculator"></i>&nbsp;&nbsp;
+                                    <p>
+                                        Contabilidad
+                                    </p>
+                                </a>
+                            </li>
 
+                            <li class="nav-item">
+                                <a class="nav-link menu_dashboard"
+                                    onclick="getShowTransfers('{{ route('getShowTransfers') }}')" type="button"
+                                    id="payroll_nav">
+                                    <i class="fa-solid fa-arrow-right-arrow-left"></i>&nbsp;&nbsp;
+                                    <p>
+                                        Transferencias
+                                    </p>
+                                </a>
+                            </li>
                         @endif
 
 

@@ -43,8 +43,8 @@
                                 <td>{{ $item['apellido'] }}</td>
                                 <td>
                                     @php
-                                        $text = ($item["rol"] === "administrador") ? "info" : "warning";
-                                        $icon = ($item["rol"] === "administrador") ? '<i class="fa-solid fa-user-tie"></i>': '<i class="fa-solid fa-user"></i>'
+                                        $text = ($item["rol"] !== "usuario") ? "info" : "warning";
+                                        $icon = ($item["rol"] !== "usuario") ? '<i class="fa-solid fa-user-tie"></i>': '<i class="fa-solid fa-user"></i>'
                                     @endphp
                                     
                                     <span
@@ -102,6 +102,9 @@
 
                                     <option value="administrador">Administrador</option>
                                     <option value="usuario">Usuario</option>
+                                    @if ($rol === "super admin")
+                                    <option value="super admin">Super Admin</option>
+                                    @endif
 
                                 </select>
                             </div>

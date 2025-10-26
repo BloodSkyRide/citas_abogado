@@ -1,7 +1,7 @@
 <div class="container-fluid">
 
 
-    @if ($id == '1093228865' || $id == '1091272724')
+    @if ($rol !== "usuario")
         <div class="form-group d-flex">
             <div>
 

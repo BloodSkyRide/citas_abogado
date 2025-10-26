@@ -227,7 +227,6 @@ class createProductController extends Controller
     public function getShowStore(Request $request)
     {
 
-
         $token_header = $request->header("Authorization");
 
         $replace = str_replace("Bearer ", "", $token_header);
@@ -244,7 +243,7 @@ class createProductController extends Controller
         $verify_Assists_start = modelAssits::verifyStartAssist($today, $state_start, $self_id);
         $verify_Assists_end = modelAssits::verifyStartAssist($today, $state_end, $self_id);
 
-        if ($rol !== "administrador") {
+        if ($rol == "usuario") {
             if (count($verify_Assists_start) > 0 && count($verify_Assists_end) < 1 ) {
 
 

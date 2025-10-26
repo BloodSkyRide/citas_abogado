@@ -23,14 +23,14 @@ class dashboardController extends Controller
     public $rols;
 
 
-        public function __construct()
+    public function __construct()
     {
 
         $this->rols = ["administrador", "super admin"];
-        
     }
 
-    public function getRols(){
+    public function getRols()
+    {
 
 
         return $this->rols;
@@ -73,7 +73,7 @@ class dashboardController extends Controller
     public function viewRegister(Request $request)
     {
 
-        
+
         $token_header = $request->header("Authorization");
 
         $replace = str_replace("Bearer ", "", $token_header);
@@ -101,10 +101,10 @@ class dashboardController extends Controller
 
         $verify_rol = in_array($rol, $this->rols);
 
-        if(!$verify_rol) return response()->json(["status" => false, "message" => "Rol no válido, verifica nuevamente"]);
+        if (!$verify_rol) return response()->json(["status" => false, "message" => "Rol no válido, verifica nuevamente"]);
         try {
 
-            
+
 
             $validate = $request->validate([
 
@@ -115,7 +115,7 @@ class dashboardController extends Controller
                 "nombre_contacto" => "required|string|max:255",
                 "direccion" => "required|string|max:255",
                 "email" => "required|email|unique:users,email",
-                "nacimiento" => "required|date|before:".Carbon::now()->subYears(18)->toDateString(),
+                "nacimiento" => "required|date|before:" . Carbon::now()->subYears(18)->toDateString(),
                 "nombre" => "required|string|max:255",
                 "password" => "required|string",
                 "rol" => "required|string|max:255"
@@ -123,7 +123,7 @@ class dashboardController extends Controller
             ]);
 
 
-            
+
 
             $validate["password"] = Hash::make($validate["password"]);
 
@@ -147,14 +147,14 @@ class dashboardController extends Controller
 
             $insert_data = modelUser::saveUser($array_request);
 
-            
-            
-            if ($insert_data){
-                
-                
+
+
+            if ($insert_data) {
+
+
                 $insert_register_schedule = modelShedule::insertids($request->cedula); //ingresa el registro a la tabla de horarios
-                
-                if($insert_register_schedule) return response()->json(["status" => true]);
+
+                if ($insert_register_schedule) return response()->json(["status" => true]);
             }
         } catch (\Throwable $th) {
 
@@ -199,35 +199,31 @@ class dashboardController extends Controller
 
         $fecha = Carbon::now()->format('y-m-d');
 
-        $date_update = modelAssits::verifyStartAssist($fecha,$state_start,$cedula);
+        $date_update = modelAssits::verifyStartAssist($fecha, $state_start, $cedula);
 
 
-        $date_finish = modelAssits::verifyStartAssist($fecha,$state_finish,$cedula);
+        $date_finish = modelAssits::verifyStartAssist($fecha, $state_finish, $cedula);
 
-        if(count($date_update) > 0 && count($date_finish) < 1){
+        if (count($date_update) > 0 && count($date_finish) < 1) {
 
 
-            $getGroupLabors = modelSubLabores::getSubLaborsForId($id_labor,$state_pending);
+            $getGroupLabors = modelSubLabores::getSubLaborsForId($id_labor, $state_pending);
 
             if ($getGroupLabors) {
-    
+
                 $name_labor = labores::getNameLabor($id_labor);
-    
-                
+
+
                 $render = view("menuDashboard.myLabors", ["token" => $decode_token, "sublabors" => $getGroupLabors, "nombre_labor" => $name_labor])->render();
-    
+
                 return response()->json(["status" => true, "html" => $render, "token" => $decode_token]);
             }
-    
+
             return response()->json(["status" => false, "messagge" => "No se pudó acceder a la base de datos para las sub labores!"]);
-
-            
-        }else
+        } else
 
 
-        return response()->json(["status" => false, "messagge" => "jornada no válida!"]);
-
-
+            return response()->json(["status" => false, "messagge" => "jornada no válida!"]);
     }
 
 
@@ -238,12 +234,12 @@ class dashboardController extends Controller
         $token_header = $request->header("Authorization");
 
         $replace = str_replace("Bearer ", "", $token_header);
-        
+
         $decode_token = JWTAuth::setToken($replace)->authenticate();
         $id_user = $decode_token["cedula"];
         $fecha = Carbon::now()->format('y-m-d');
 
-        $horas = modelAssits::getMyAssists($id_user,$fecha);
+        $horas = modelAssits::getMyAssists($id_user, $fecha);
 
 
         $array = $horas->toArray();
@@ -251,46 +247,42 @@ class dashboardController extends Controller
         $convert_array = [];
 
 
-        for($i = 0; $i < 4; $i++){
+        for ($i = 0; $i < 4; $i++) {
 
-            if(isset($array[$i]['hora'])){
-                
+            if (isset($array[$i]['hora'])) {
+
                 $hora = $array[$i]['hora'];
                 $hora_12 = Carbon::createFromFormat('H:i:s', $hora)->format('h:i A');
-                array_push($convert_array,[
+                array_push($convert_array, [
 
                     "horas" => $hora_12,
                     "accion" => false
                 ]);
+            } else {
 
-            }else{
-
-                array_push($convert_array,[
+                array_push($convert_array, [
 
                     "horas" => "N/A",
                     "accion" => true
                 ]);
-
             }
-
         }
 
-    $eventos = [
-        ["jornada" => "INICIAR JORNADA LABORAL"], 
-        ["jornada" => "INICIAR JORNADA ALIMENTARIA"],
-        ["jornada" => "INICIAR JORNADA LABORAL TARDE"],
-        ["jornada" => "FINALIZAR JORNADA LABORAL"],
-    ];
-    
-    
-    foreach($eventos as $index => &$evento){
-        
-        
-        if (isset($convert_array[$index])) {
-            $evento = array_merge($evento, $convert_array[$index]);
+        $eventos = [
+            ["jornada" => "INICIAR JORNADA LABORAL"],
+            ["jornada" => "INICIAR JORNADA ALIMENTARIA"],
+            ["jornada" => "INICIAR JORNADA LABORAL TARDE"],
+            ["jornada" => "FINALIZAR JORNADA LABORAL"],
+        ];
+
+
+        foreach ($eventos as $index => &$evento) {
+
+
+            if (isset($convert_array[$index])) {
+                $evento = array_merge($evento, $convert_array[$index]);
+            }
         }
-        
-    }
 
         $render = view("menuDashboard.assists", ["eventos" => $eventos])->render();
 
@@ -299,17 +291,24 @@ class dashboardController extends Controller
 
 
 
-    public function getShowUserAdmin(){
+    public function getShowUserAdmin(Request $request)
+    {
 
+        $token_header = $request->header("Authorization");
+
+        $replace = str_replace("Bearer ", "", $token_header);
+
+        $decode_token = JWTAuth::setToken($replace)->authenticate();
+        $rol = $decode_token["rol"];
         $users = modelUser::getAllUsers();
 
         $data = [];
 
-        foreach($users as $item){
+        foreach ($users as $item) {
 
 
 
-            array_push($data,[
+            array_push($data, [
 
                 "cedula" => $item->cedula,
                 "nombre" => $item->nombre,
@@ -324,33 +323,30 @@ class dashboardController extends Controller
                 "fecha_registro" => $item->fecha_registro,
 
             ]);
-
         }
 
         $array_labores = labores::getLabores();
 
-        
 
-        $render = view("menuDashboard.usersView", ["users" => $data, "labores" => $array_labores])->render();
+
+        $render = view("menuDashboard.usersView", ["users" => $data, "labores" => $array_labores, "rol" => $rol])->render();
 
 
         return response()->json(["status" => true, "html" => $render]);
-
-
     }
 
 
 
-    public function changePasswordShow(){
+    public function changePasswordShow()
+    {
 
         $render = view("menuDashboard.viewChangePassword")->render();
 
         return response()->json(["status" => true, "html" => $render]);
-
-
     }
 
-    public function getShowNotices(){
+    public function getShowNotices()
+    {
 
 
 
@@ -360,12 +356,13 @@ class dashboardController extends Controller
         return response()->json(["status" => true, "html" => $render]);
     }
 
-    public function getShowOverTime(Request $request){
+    public function getShowOverTime(Request $request)
+    {
 
         $token_header = $request->header("Authorization");
 
         $replace = str_replace("Bearer ", "", $token_header);
-        
+
         $decode_token = JWTAuth::setToken($replace)->authenticate();
         $id_user = $decode_token["cedula"];
 
@@ -374,10 +371,8 @@ class dashboardController extends Controller
         $data = modelOverTime::getMyRequest($id_user, $date_searcher);
 
 
-        $render = view("menuDashboard.overTimeAdmin",["id_user" => $id_user, "request" => $data])->render();
+        $render = view("menuDashboard.overTimeAdmin", ["id_user" => $id_user, "request" => $data])->render();
 
-        return response()->json(["status"=> true, "html" => $render]);
-
-
+        return response()->json(["status" => true, "html" => $render]);
     }
 }
