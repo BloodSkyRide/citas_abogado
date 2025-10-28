@@ -346,6 +346,7 @@
 
 
                         @if ($array['rol'] === 'super admin')
+
                             <li class="nav-item">
                                 <a class="nav-link" type="button"
                                     onclick="getShowChangePassword('{{ route('changePasswordShow') }}')">
@@ -355,6 +356,7 @@
                                     </p>
                                 </a>
                             </li>
+                            
                             <li class="nav-item">
                                 <a class="nav-link menu_dashboard"
                                     onclick="getShowOrdersKitchen('{{ route('showKitchen') }}')" type="button">

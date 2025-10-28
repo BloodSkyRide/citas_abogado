@@ -1,7 +1,4 @@
 $(document).ready(function () {
-
-
-    
     $("#register_nav").trigger("click");
 });
 
@@ -52,9 +49,7 @@ echo.channel("realtime-channel") // El nombre del canal debe coincidir con lo qu
             (get_id == "1093228865" || get_id == "1091272724") &&
             data.tipo === "pedido"
         ) {
-            
-
-           await hablar(
+            await hablar(
                 `Tienes un pedido nuevo: ${data.amount} ${data.name_product} y porfavor ${data.description}`
             );
             let notification = $(document).Toasts("create", {
@@ -211,7 +206,6 @@ async function buttonChangeState(id_order, state) {
         });
 
         if (state == "despachado" || state == "rechazado") {
-
             const toast = document.querySelector(`.toast-${id_order}`);
 
             toast.remove();
@@ -372,7 +366,7 @@ async function register_user(url) {
         dataType: "json",
         headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
         },
     }).done(function (res) {
         if (res.status) {
@@ -390,7 +384,6 @@ async function sendUser(url) {
     const token = localStorage.getItem("access_token");
 
     if (verifyInputs()) {
-
         form.forEach((value, key) => {
             jsonObject[key] = value;
         });
@@ -487,10 +480,10 @@ function getDataArray() {
         } else {
             convert_id.style.border = "2px solid red";
             Swal.fire({
-            title: "Uuuups!",
-            text: "Parece que hay algun dato inválido en tu inventario, verifica nuevamente",
-            icon: "error",
-        });
+                title: "Uuuups!",
+                text: "Parece que hay algun dato inválido en tu inventario, verifica nuevamente",
+                icon: "error",
+            });
             throw new Error("Campo no numérico encontrado");
         }
     }
@@ -1417,7 +1410,6 @@ async function logout(url) {
         window.location.href = "./";
     }
 }
-
 
 function verifyInputs() {
     let nombre = document.getElementById("nombre");
@@ -2370,12 +2362,44 @@ function getDataProduct() {
     return data;
 }
 
+function verifyItems() {
+    let nombre = document.getElementById("nombre_producto");
+    let precio = document.getElementById("precio_producto");
+    let description = document.getElementById("descripcion_textarea");
+    let categoria = document.getElementById("category");
+    
+    let retorno = 0;
+
+    let items = getDataProduct();
+
+    if(items.length < 1) retorno++;
+
+    let data = [nombre, precio, description, categoria];
+
+    data.forEach((item) => {
+        if (item.value === "" || item.value === " ") retorno++;
+    });
+    console.log("el retorno es "+retorno);
+    return retorno;
+}
+
 async function saveProduct(url) {
+    if (verifyItems() > 0) {
+        Swal.fire({
+
+            title: "¡UUps!",
+            text: "verifica que todos los campos esten correctamente diligenciados",
+            icon: "error",
+        });
+
+        return 0;
+    }
     let nombre = document.getElementById("nombre_producto");
     let precio = document.getElementById("precio_producto");
     let dato = getDataProduct();
     let description = document.getElementById("descripcion_textarea");
     let categoria = document.getElementById("category");
+
     // let form_image = getImagen();
 
     let input = document.getElementById("imagen_product");
