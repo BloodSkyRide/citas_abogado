@@ -2367,11 +2367,13 @@ function verifyItems() {
     let precio = document.getElementById("precio_producto");
     let description = document.getElementById("descripcion_textarea");
     let categoria = document.getElementById("category");
+    let type_product = document.getElementById('type_product');
     
     let retorno = 0;
 
     let items = getDataProduct();
 
+    if(type_product.value === "selected") retorno++;
     if(items.length < 1) retorno++;
 
     let data = [nombre, precio, description, categoria];
@@ -2384,7 +2386,7 @@ function verifyItems() {
 }
 
 async function saveProduct(url) {
-    if (verifyItems() > 0) {
+    if (verifyItems() > 0) {asdsad
         Swal.fire({
 
             title: "¡UUps!",
@@ -2399,6 +2401,7 @@ async function saveProduct(url) {
     let dato = getDataProduct();
     let description = document.getElementById("descripcion_textarea");
     let categoria = document.getElementById("category");
+    let type_product = document.getElementById("type_product");
 
     // let form_image = getImagen();
 
@@ -2412,6 +2415,7 @@ async function saveProduct(url) {
     formData.append("array", JSON.stringify(dato));
     formData.append("description", description.value);
     formData.append("categoria", categoria.value);
+    formData.append("tipo_producto", type_product.value);
 
     const token = localStorage.getItem("access_token");
 

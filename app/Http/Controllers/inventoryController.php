@@ -130,7 +130,8 @@ class inventoryController extends Controller
     {
 
         $composed = modelCompuesto::getIdProductSeller($id_item_fk);
-
+        if(count($composed) > 1)$type_compound = "compuesto";
+        
         $array_ids = [];
         if ($composed) {
 
@@ -140,8 +141,12 @@ class inventoryController extends Controller
 
                     "id_producto_venta" => $item['id_producto_venta']
                 ]);
+
             }
         } else return 0;
+
+
+        
 
 
         foreach ($array_ids as $item) {
@@ -149,7 +154,7 @@ class inventoryController extends Controller
 
             $verify_category = modelProducts::verifyCategory($item['id_producto_venta']);
 
-            if (isset($verify_category->categoria) && $verify_category->categoria == "tienda") {
+            if (isset($verify_category->categoria) && $verify_category->categoria == "tienda" && $verify_category->tipo_producto === "unitario") {
                 return (!isset($verify_category->precio)) ? 0 : $verify_category->precio;
             }
         }

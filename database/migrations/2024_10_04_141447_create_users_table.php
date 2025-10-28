@@ -26,6 +26,7 @@ return new class extends Migration
             $table->String('telefono',255)->nullable();
             $table->String('contacto_emergencia',255)->nullable();
             $table->String('nombre_contacto',255)->nullable();
+            $table->text('permisos')->nullable();
             $table->text('url',255)->nullable();
             $table->timestamps();
         });

@@ -19,7 +19,8 @@ return new class extends Migration
             $table->string("categoria",100)->nullable();
             $table->text("descripcion")->nullable();
             $table->date('fecha_creacion')->nullable();
-            $table->text('url_imagen')->nullable();
+            $table->string('tipo_producto', 100)->nullable();
+            $table->text('url_imagen')->nullabler();
             $table->timestamps();
         });
     }

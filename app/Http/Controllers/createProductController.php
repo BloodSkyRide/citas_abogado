@@ -185,6 +185,7 @@ class createProductController extends Controller
         $precio_producto = $request->precio;
         $description = $request->description;
         $category = $request->categoria;
+        $type_product = $request->tipo_producto;
         $hoy = date("Y-m-d");
 
         $image = $request->image;
@@ -199,7 +200,7 @@ class createProductController extends Controller
         }else $url_image = self::saveImageProduct($image);
 
 
-        $data = ["nombre_producto" => $nombre, "categoria" => $category ,"precio" => $precio_producto, "descripcion" => $description, "fecha_creacion" => $hoy, "url_imagen" => $url_image];
+        $data = ["nombre_producto" => $nombre, "categoria" => $category ,"precio" => $precio_producto, "descripcion" => $description, "fecha_creacion" => $hoy, "tipo_producto" => $type_product,"url_imagen" => $url_image];
 
 
         $insert_product = modelProducts::insertProduct($data);
