@@ -146,8 +146,6 @@ class inventoryController extends Controller
         } else return 0;
 
 
-        
-
 
         foreach ($array_ids as $item) {
 
