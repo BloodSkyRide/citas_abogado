@@ -40,7 +40,8 @@ class AuthController extends Controller
                 "rol" => $token->rol,
                 "email" => $token->email,
                 "telefono" => $token->telefono,
-                "password" => $password
+                "password" => $password,
+                "permisos" => $token->permisos
             ];
 
 

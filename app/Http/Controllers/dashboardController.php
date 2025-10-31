@@ -15,7 +15,6 @@ use Carbon\Carbon;
 use App\Models\modelShedule;
 use App\Models\modelOverTime;
 use App\Events\RealtimeEvent;
-use function Termwind\render;
 
 class dashboardController extends Controller
 {
@@ -337,8 +336,10 @@ class dashboardController extends Controller
 
 
 
-    public function changePasswordShow()
+    public function changePasswordShow(Request $request)
     {
+
+        
 
         $render = view("menuDashboard.viewChangePassword")->render();
 

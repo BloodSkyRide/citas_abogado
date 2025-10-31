@@ -15,7 +15,7 @@ class modelUser extends Authenticatable implements JWTSubject
     // Indica la tabla de la base de datos que se utilizará
     protected $table = 'users';
     protected $fillable = ['cedula', 'password', 'nombre', 'apellido', 'fecha_registro', 'fecha_notificacion', 
-    'rol', 'direccion', 'email', 'telefono', 'contacto_emergencia', 'nombre_contacto', 'url', 'created_at', 'updated_at']; // asignar toda las tabla de users, recordar la captura de la fecha de creacion del usuario
+    'rol', 'direccion', 'email', 'telefono', 'contacto_emergencia', 'nombre_contacto','permisos', 'url', 'created_at', 'updated_at']; // asignar toda las tabla de users, recordar la captura de la fecha de creacion del usuario
 
     // Este método obtiene un usuario basado en la cédula
     public static function getuserAndPassword($cedula)
