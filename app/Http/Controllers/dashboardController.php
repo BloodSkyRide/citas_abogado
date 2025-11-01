@@ -15,6 +15,7 @@ use Carbon\Carbon;
 use App\Models\modelShedule;
 use App\Models\modelOverTime;
 use App\Events\RealtimeEvent;
+use App\Permission\Permission;
 
 class dashboardController extends Controller
 {
@@ -81,9 +82,16 @@ class dashboardController extends Controller
 
         $rol = $decode_token["rol"];
 
-        $htmlContent = view("menuDashboard.registerUser", ["rol" => $rol])->render();
+        $array_permission = Permission::getPermision($request);
 
-        return response()->json(["status" => true, "html" => $htmlContent]);
+        if(in_array("register_users",$array_permission)){
+
+            $htmlContent = view("menuDashboard.registerUser", ["rol" => $rol])->render();
+    
+            return response()->json(["status" => true, "html" => $htmlContent]);
+
+        }else return response()->json(["status" => false, "mesagge" => "Permisos no validos"]);
+
     }
 
 
@@ -303,35 +311,43 @@ class dashboardController extends Controller
 
         $data = [];
 
-        foreach ($users as $item) {
+        $permissions = Permission::getPermision($request);
+
+        if(in_array("manage_users",$permissions)){
+
+            foreach ($users as $item) {
+    
+    
+    
+                array_push($data, [
+    
+                    "cedula" => $item->cedula,
+                    "nombre" => $item->nombre,
+                    "apellido" => $item->apellido,
+                    "rol" => $item->rol,
+                    "id_labor" => $item->id_labor,
+                    "direccion" => $item->direccion,
+                    "email" => $item->email,
+                    "contacto_emergencia" => $item->contacto_emergencia,
+                    "nombre_contacto" => $item->nombre_contacto,
+                    "telefono" => $item->telefono,
+                    "fecha_registro" => $item->fecha_registro,
+    
+                ]);
+            }
+    
+            $array_labores = labores::getLabores();
+    
+    
+    
+            $render = view("menuDashboard.usersView", ["users" => $data, "labores" => $array_labores, "rol" => $rol])->render();
+    
+    
+            return response()->json(["status" => true, "html" => $render]);
 
 
-
-            array_push($data, [
-
-                "cedula" => $item->cedula,
-                "nombre" => $item->nombre,
-                "apellido" => $item->apellido,
-                "rol" => $item->rol,
-                "id_labor" => $item->id_labor,
-                "direccion" => $item->direccion,
-                "email" => $item->email,
-                "contacto_emergencia" => $item->contacto_emergencia,
-                "nombre_contacto" => $item->nombre_contacto,
-                "telefono" => $item->telefono,
-                "fecha_registro" => $item->fecha_registro,
-
-            ]);
         }
 
-        $array_labores = labores::getLabores();
-
-
-
-        $render = view("menuDashboard.usersView", ["users" => $data, "labores" => $array_labores, "rol" => $rol])->render();
-
-
-        return response()->json(["status" => true, "html" => $render]);
     }
 
 
@@ -339,7 +355,6 @@ class dashboardController extends Controller
     public function changePasswordShow(Request $request)
     {
 
-        
 
         $render = view("menuDashboard.viewChangePassword")->render();
 

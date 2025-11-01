@@ -168,8 +168,8 @@
                                                     <option value="203">203 PAREJA SENCILLA</option>
                                                     <option value="204">204 PAREJA SENCILLA</option>
                                                     <option value="205">205 PAREJA SENCILLA</option>
-                                                    <option value="205">206 TRIPLE SENCILLA</option>
-                                                    <option value="206">207 TRIPLE SENCILLA</option>
+                                                    <option value="206">206 TRIPLE SENCILLA</option>
+                                                    <option value="207">207 TRIPLE SENCILLA</option>
                                                     <option value="208">208 PAREJA TINA</option>
                                                     <option value="209">209 FAMILIAR SENCILLA</option>
                                                     <option value="camping">CAMPING LIBRE</option>
