@@ -1,8 +1,11 @@
 <?php
+
 namespace App\Permission;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Tymon\JWTAuth\Facades\JWTAuth;
+
 class Permission
 {
     // lista de permisos que tiene la app en caso iniciar nuevamente o añadir mas permisos deben ser declarados aqui
@@ -20,6 +23,8 @@ class Permission
         'schedules',                // Ver y gestionar horarios
         'payrol',                   // Acceso al módulo de nómina
 
+        'kitchen',
+        'kitchen.searcher',
         // 🛒 Ventas e inventario
         'product_seller',           // crear productos de venta
         'inventory',                // Inventario general
@@ -47,14 +52,20 @@ class Permission
 
 
 
-    public static function getPermision(Request $request){
+    public static function getPermision(Request $request)
+    {
 
-        
+
         $token_header = $request->header("Authorization");
+
+        if (!isset($token_header)) $token_header = $request->query("token");
+
 
         $replace = str_replace("Bearer ", "", $token_header);
 
+
         $decode_token = JWTAuth::setToken($replace)->authenticate();
+
 
         $permissions = $decode_token["permisos"];
 
@@ -63,39 +74,47 @@ class Permission
         $array_filter = self::filterPermision($permissions_array);
 
         return $array_filter;
-
     }
 
 
 
-    private static function filterPermision($array_permissions_token){
+    private static function filterPermision($array_permissions_token)
+    {
 
 
         $array_filter = [];
 
-        foreach($array_permissions_token as $item){
+        foreach ($array_permissions_token as $item) {
 
-            if(in_array($item, self::$list_permission)){
+            if (in_array($item, self::$list_permission)) {
 
-                array_push($array_filter,[
-
-
-                    $item
-                ]);
+                array_push($array_filter, $item);
             }
-
         }
 
         return $array_filter;
-
-
     }
 
 
-        private function getPermissionsArray($text_bd_permission){
+    private static function getPermissionsArray($text_bd_permission)
+    {
 
-        
-        return explode(",",$text_bd_permission);
 
+        return explode(",", $text_bd_permission);
+    }
+
+
+    public static function differentialPermission() {}
+
+
+    public static function verifyPermission($permission_comparative, $token_array)
+    {
+
+        foreach ($token_array as $permiso) {
+            if (str_starts_with($permiso, $permission_comparative)) {
+
+                return $permiso;
+            }
+        }
     }
 }

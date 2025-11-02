@@ -16,7 +16,7 @@ use App\Models\modelShedule;
 use App\Models\modelOverTime;
 use App\Events\RealtimeEvent;
 use App\Permission\Permission;
-
+ 
 class dashboardController extends Controller
 {
 
@@ -51,8 +51,9 @@ class dashboardController extends Controller
     public function openView(Request $request)
     {
         $token = $request->query("token");
+        
+        $permissions = Permission::getPermision($request);
         $decode_token = JWTAuth::setToken($token)->authenticate();
-
         if ($decode_token) {
 
             $array = [
@@ -63,6 +64,7 @@ class dashboardController extends Controller
                 "rol" => $decode_token->rol,
                 "email" => $decode_token->email,
                 "telefono" => $decode_token->telefono,
+                "permisos" => $permissions
 
             ];
             return view('dashboard', ["array" => $array]);
@@ -83,15 +85,13 @@ class dashboardController extends Controller
         $rol = $decode_token["rol"];
 
         $array_permission = Permission::getPermision($request);
-
-        if(in_array("register_users",$array_permission)){
+        
+        if (in_array("register_users", $array_permission)) {
 
             $htmlContent = view("menuDashboard.registerUser", ["rol" => $rol])->render();
-    
+
             return response()->json(["status" => true, "html" => $htmlContent]);
-
-        }else return response()->json(["status" => false, "mesagge" => "Permisos no validos"]);
-
+        }
     }
 
 
@@ -312,15 +312,15 @@ class dashboardController extends Controller
         $data = [];
 
         $permissions = Permission::getPermision($request);
-
-        if(in_array("manage_users",$permissions)){
+        
+        if (in_array("manage_users", $permissions)) {
 
             foreach ($users as $item) {
-    
-    
-    
+
+
+
                 array_push($data, [
-    
+
                     "cedula" => $item->cedula,
                     "nombre" => $item->nombre,
                     "apellido" => $item->apellido,
@@ -332,22 +332,19 @@ class dashboardController extends Controller
                     "nombre_contacto" => $item->nombre_contacto,
                     "telefono" => $item->telefono,
                     "fecha_registro" => $item->fecha_registro,
-    
+
                 ]);
             }
-    
+
             $array_labores = labores::getLabores();
-    
-    
-    
+
+
+
             $render = view("menuDashboard.usersView", ["users" => $data, "labores" => $array_labores, "rol" => $rol])->render();
-    
-    
+
+
             return response()->json(["status" => true, "html" => $render]);
-
-
         }
-
     }
 
 
@@ -355,10 +352,17 @@ class dashboardController extends Controller
     public function changePasswordShow(Request $request)
     {
 
+        $permissions = Permission::getPermision($request);
 
-        $render = view("menuDashboard.viewChangePassword")->render();
+        if(in_array("change_password", $permissions)){
 
-        return response()->json(["status" => true, "html" => $render]);
+            
+                    $render = view("menuDashboard.viewChangePassword")->render();
+            
+                    return response()->json(["status" => true, "html" => $render]);
+
+        }
+        else return response()->json(["status" => false, "message" => "Permiso invalido"]);
     }
 
     public function getShowNotices()

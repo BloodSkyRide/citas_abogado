@@ -8,7 +8,7 @@ use App\Models\modelCompuesto;
 use App\Models\modelInventario;
 use App\Models\modelFoodEmployee;
 use Tymon\JWTAuth\Facades\JWTAuth;
-
+use App\Permission\Permission; 
 class employeFoodController extends Controller
 {
     public function getShowEmployeeFood(Request $request){

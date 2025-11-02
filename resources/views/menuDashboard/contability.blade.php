@@ -4,7 +4,7 @@
         <div>
 
             
-            @if ($rol !== "usuario")
+            @if ($permisos === "contability")
             
             <label>Fecha:</label>
             <div class="input-group date" data-target-input="nearest">
@@ -25,7 +25,7 @@
         <div class="card-header p-0 pt-1">
             <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
 
-                @if ($rol === "administrador" || $rol === "super admin")
+                @if ($permisos === "contability")
                     
                 <li class="nav-item">
                     <a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill"

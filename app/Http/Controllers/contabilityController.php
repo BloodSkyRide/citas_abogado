@@ -10,6 +10,7 @@ use App\Models\modelContability;
 use App\Models\modelEgress;
 use App\Models\modelEgressTotal;
 use App\Http\Controllers\dashboardController;
+use App\Permission\Permission; 
 
 
 class contabilityController extends Controller
@@ -35,11 +36,11 @@ class contabilityController extends Controller
 
         $self_name = $decode_token["nombre"];
 
-        $rol = $decode_token["rol"];
+        // $rol = $decode_token["rol"];
 
-        $confirm = in_array($rol, $this->rols);
-
-        if ($confirm) {
+        $permissions = Permission::getPermision($request);
+        $verify_permissions = Permission::verifyPermission("contability", $permissions);
+        if ($verify_permissions  === "contability") {
 
             $fechaActual = Carbon::now();
             $today = Carbon::now()->format('Y-m-d');
@@ -72,12 +73,12 @@ class contabilityController extends Controller
                     "total_egreso" => $get_total_egress,
                     "egress_detail" => $get_egress_deatail,
                     "egress_total" => $total_egress_detail,
-                    "rol" => $rol
+                    "permisos" => $verify_permissions
                 ])->render();
 
                 return response()->json(["status" => true, "html" => $render]);
             }
-        } else {
+        } else if($verify_permissions  === "contability.egress"){
 
             //vista para solo registrar un egreso
             $fechaActual = Carbon::now();
@@ -111,14 +112,14 @@ class contabilityController extends Controller
                     "total_egreso" => $get_total_egress,
                     "egress_detail" => $get_egress_deatail,
                     "egress_total" => $total_egress_detail,
-                    "rol" => $rol
+                    "permisos" => $verify_permissions
                 ])->render();
 
                 return response()->json(["status" => true, "html" => $render]);
             }
         }
 
-        return response()->json(["message" => "Error interno en el servidor", "status" => false]);
+        return response()->json(["message" => "permisos invalidos", "status" => false]);
     }
 
 

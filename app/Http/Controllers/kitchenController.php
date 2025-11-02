@@ -9,6 +9,7 @@ use App\Models\modelProducts;
 use App\Models\modelKitchen;
 use App\Models\modelSell;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use App\Permission\Permission; 
 
 class kitchenController extends Controller
 {
@@ -122,7 +123,8 @@ class kitchenController extends Controller
     public function getShowKitchen(Request $request)
     {
 
-
+        $permissions = Permission::getPermision($request);
+        $verify_permissions = Permission::verifyPermission("contability", $permissions);
         $token_header = $request->header("Authorization");
 
         $replace = str_replace("Bearer ", "", $token_header);
