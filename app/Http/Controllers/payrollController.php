@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use PhpParser\Node\Stmt\TryCatch;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Storage;
+use App\Permission\Permission; 
 
 class payrollController extends Controller
 {
@@ -18,9 +19,15 @@ class payrollController extends Controller
 
 
         $users_id = modelUser::getAllUsers();
+        $permissions = Permission::getPermision($request);
+        $verify_permissions = Permission::verifyPermission("payrol", $permissions);
 
+        if($verify_permissions === "payrol"){
 
-        $render = view("menuDashboard.payRoll", ["users" => $users_id])->render();
+            $render = view("menuDashboard.payRoll", ["users" => $users_id])->render();
+
+        }
+
 
         return response()->json(["status" => true, "html" => $render]);
 

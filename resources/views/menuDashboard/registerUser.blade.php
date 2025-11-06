@@ -43,10 +43,12 @@
                         <select class="form-control" name="rol" id="rol">
                             
                             <option value="usuario">Usuario</option>
-                            @if ($rol === "super admin")
-                            <option value="super admin">Administrador</option>
+
+                            @if ($permisos === "register_users")
+                            <option value="super admin">Super Admin</option>
                             <option value="administrador">Administrador</option>
                             @endif
+                            
                         </select>
                     </div>
                 </div>

@@ -1,7 +1,7 @@
 <div class="container-fluid">
 
 
-    @if ($rol !== "usuario")
+    @if (isset($permission) && $permission === 'kitchen')
         <div class="form-group d-flex">
             <div>
 
@@ -109,7 +109,7 @@
 
                                                     $button_start = '';
                                                     $button_end = '';
-                                                    if ($id == '1093228865' || $id == '1091272724') {
+                                                    if ($permission === 'kitchen') {
                                                         $button_start =
                                                             '<a type="button" title="cambiar estado" onclick="openModalKitchen(' .
                                                             $item['id_pedido'] .
@@ -191,40 +191,43 @@
                             @endphp
 
                             <div class="table-responsive">
-                                                            <table class="table" id="table_order_kitchen_unit">
-                                <thead class="thead-dark">
-                                    <tr>
-                                        <th scope="col">Nombre Producto</th>
-                                        <th scope="col"># items Ordenados a Cocina</th>
-                                        <th scope="col"># items registrados en ventas</th>
-                                        <th scope="col"># items faltantes en venta</th>
-                                        <th scope="col">Monto restante</th>
-
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($comparativo as $item)
-
-                                    @php
-                                        $total_descuadres += $item['total_restante'];
-                                    @endphp
+                                <table class="table" id="table_order_kitchen_unit">
+                                    <thead class="thead-dark">
                                         <tr>
-                                            <td><span class="badge badge-info">{{ $item['nombre_producto'] }}</span>
-                                            </td>
-                                            <td><span
-                                                    class="badge badge-warning">{{ $item['items_ordenados'] }}</span>
-                                            </td>
-                                            <td><span
-                                                    class="badge badge-success">{{ $item['items_historial'] }}</span>
-                                            </td>
-                                            <td><span class="badge badge-danger">{{ $item['diferencia'] }}</span></td>
-                                            <td><i class="fa-solid fa-dollar-sign text-success"></i>&nbsp;&nbsp;{{ number_format($item['total_restante'], 0, '', '.') }}</td>
+                                            <th scope="col">Nombre Producto</th>
+                                            <th scope="col"># items Ordenados a Cocina</th>
+                                            <th scope="col"># items registrados en ventas</th>
+                                            <th scope="col"># items faltantes en venta</th>
+                                            <th scope="col">Monto restante</th>
 
                                         </tr>
-                                    @endforeach
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($comparativo as $item)
+                                            @php
+                                                $total_descuadres += $item['total_restante'];
+                                            @endphp
+                                            <tr>
+                                                <td><span
+                                                        class="badge badge-info">{{ $item['nombre_producto'] }}</span>
+                                                </td>
+                                                <td><span
+                                                        class="badge badge-warning">{{ $item['items_ordenados'] }}</span>
+                                                </td>
+                                                <td><span
+                                                        class="badge badge-success">{{ $item['items_historial'] }}</span>
+                                                </td>
+                                                <td><span class="badge badge-danger">{{ $item['diferencia'] }}</span>
+                                                </td>
+                                                <td><i
+                                                        class="fa-solid fa-dollar-sign text-success"></i>&nbsp;&nbsp;{{ number_format($item['total_restante'], 0, '', '.') }}
+                                                </td>
 
-                                </tbody>
-                            </table>
+                                            </tr>
+                                        @endforeach
+
+                                    </tbody>
+                                </table>
                             </div>
 
 

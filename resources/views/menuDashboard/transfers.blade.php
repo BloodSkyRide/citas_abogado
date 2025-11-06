@@ -1,8 +1,11 @@
 <div class="container-fluid">
 
     <div class="form-group d-flex">
+        
+        
+        @if ($permisos == "transfer")
         <div>
-
+                
             <label>Fecha:</label>
             <div class="input-group date" data-target-input="nearest">
                 <input type="date" class="form-control" data-target="#reservationdate" id="range_search">
@@ -15,15 +18,20 @@
                     fecha</button>
             </div>
         </div>
+            @endif
     </div>
     <div class="card card-primary card-tabs" style="width: 100%">
         <div class="card-header p-0 pt-1">
             <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+
+                @if ($permisos === "transfer")
+                
                 <li class="nav-item">
                     <a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill"
                         href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home"
                         aria-selected="true"><i class="fa-solid fa-right-left"></i>&nbsp;&nbsp;Transferencias</a>
                 </li>
+                @endif
                 {{-- <li class="nav-item">
                     <a class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill"
                         href="#custom-tabs-one-profile" role="tab" aria-controls="custom-tabs-one-profile"
@@ -47,6 +55,8 @@
                 <div class="tab-pane fade active show" id="custom-tabs-one-home" role="tabpanel"
                     aria-labelledby="custom-tabs-one-home-tab">
 
+                    @if ($permisos === "transfer")
+                        
                     <div class="table-responsive mt-3">
                         <table class="table">
                             <thead class="thead-dark">
@@ -70,7 +80,6 @@
                             </tbody>
                         </table>
                     </div>
-
                     <div class="row p-5">
 
                         <div class="col-sm">
@@ -82,6 +91,10 @@
                             </h3>
                         </div>
                     </div>
+
+                    @endif
+
+
                 </div>
                 {{-- <div class="tab-pane fade" id="custom-tabs-one-profile" role="tabpanel"
                     aria-labelledby="custom-tabs-one-profile-tab">

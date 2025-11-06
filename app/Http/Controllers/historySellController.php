@@ -10,6 +10,7 @@ use App\Models\modelUser;
 use Carbon\Carbon;
 use App\Http\Controllers\dashboardController;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use App\Permission\Permission; 
 
 class historySellController extends Controller
 {
@@ -81,13 +82,15 @@ class historySellController extends Controller
         $total_caja_egress = modelEgress::getEgressCaja($today, $self_id);
 
         $self_sell = modelSell::getMySell($today, $self_id);
+        $permissions = Permission::getPermision($request);
+        $verify_permissions = Permission::verifyPermission("history_sell", $permissions);
 
-
-        if(in_array($rol, $this->rols)){
+        if($verify_permissions === "history_sell"){
    
             $total_sells_for_user = self::getCashPerson($today);
             $render = view("menuDashboard.historySell", ["rol" => $rol, 
-            "historial" => $history_sells, 
+            "historial" => $history_sells,
+            "permisos" => $verify_permissions, 
             "total" => $total_venta, 
             "unificado" => $total_venta_unificada, 
             "users" => $total_venta_users,
@@ -97,12 +100,13 @@ class historySellController extends Controller
             "my_sell" => $self_sell,
             "total_users" => $total_sells_for_user,])->render();
 
-            return response()->json(["status" => true, "html" => $render]);
+            
 
-        }else{
+        }else if ($verify_permissions === "history_sell.searcher"){
 
             $render = view("menuDashboard.historySell", ["rol" => $rol, 
-            "historial" => $history_sells, 
+            "historial" => $history_sells,
+            "permisos" => $verify_permissions,  
             "total" => $total_venta, 
             "unificado" => $total_venta_unificada, 
             "users" => $total_venta_users,
@@ -110,11 +114,10 @@ class historySellController extends Controller
             "name" => $self_name,
             "my_egress" => $total_caja_egress,
             "my_sell" => $self_sell])->render();
-    
-            return response()->json(["status" => true, "html" => $render]);
-
 
         }
+
+        return response()->json(["status" => true, "html" => $render]);
 
     }
 
@@ -155,14 +158,17 @@ class historySellController extends Controller
 
         $self_sell = modelSell::getMySell($today, $self_id);
 
+        $permissions = Permission::getPermision($request);
+        $verify_permissions = Permission::verifyPermission("history_sell", $permissions);
 
-        if(in_array($rol, $this->rols)){
+
+        if($verify_permissions == "history_sell"){
 
 
             $total_sells_for_user = self::getCashPerson($today);
     
             $render = view("menuDashboard.historySell", [
-             "rol" => $rol,
+             "permisos" => $verify_permissions,
              "historial" => $history_sells, 
              "total" => $total_venta, 
              "unificado" => $total_venta_unificada, 
@@ -176,22 +182,6 @@ class historySellController extends Controller
              ])->render();
     
             return response()->json(["status" => true, "html" => $render]);
-
-        }else{
-
-            $render = view("menuDashboard.historySell", ["rol" => $rol, 
-            "historial" => $history_sells, 
-            "total" => $total_venta, 
-            "unificado" => $total_venta_unificada, 
-            "users" => $total_venta_users,
-            "self_transfers" => $self_transfers,
-            "name" => $self_name,
-            "my_egress" => $total_caja_egress,
-            "my_sell" => $self_sell,
-            "self_id" => $self_id])->render();
-    
-            return response()->json(["status" => true, "html" => $render]);
-
 
         }
 

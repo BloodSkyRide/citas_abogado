@@ -14,6 +14,8 @@ use App\Models\modelAssits;
 use App\Models\modelcontrol_inventarios;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Storage;
+use App\Permission\Permission; 
+
 
 use function Laravel\Prompts\confirm;
 
@@ -155,12 +157,18 @@ class createProductController extends Controller
 
     public function createProducts(Request $request)
     {
+        
+        $permissions = Permission::getPermision($request);
+        $verify_permissions = Permission::verifyPermission("product_seller", $permissions);
+        if($verify_permissions === "product_seller"){
 
-        $productos_inventario = modelInventario::getAllProducts();
-        $products_compound = modelProducts::getAllProducts();
-        $render = view("menuDashboard.createProduct", ["productos" => $productos_inventario, "compuestos" => $products_compound])->render();
+            $productos_inventario = modelInventario::getAllProducts();
+            $products_compound = modelProducts::getAllProducts();
+            $render = view("menuDashboard.createProduct", ["productos" => $productos_inventario, "compuestos" => $products_compound])->render();
+    
+            return response()->json(["status" => true, "html" => $render]);
 
-        return response()->json(["status" => true, "html" => $render]);
+        }
     }
 
 

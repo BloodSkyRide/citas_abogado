@@ -8,6 +8,8 @@ use App\Models\modelcontrol_inventarios;
 use App\Models\modelProducts;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use App\Permission\Permission;  
+
 
 class inventoryController extends Controller
 {
@@ -28,11 +30,14 @@ class inventoryController extends Controller
 
         $rol = $decode_token["rol"];
 
-        $productos_inventario = ($rol == "administrador") ? modelInventario::getAllProducts() : modelInventario::getProductsCategory($this->category_store);
+        $permissions = Permission::getPermision($request);
+        $verify_permissions = Permission::verifyPermission("inventory", $permissions);
+
+        $productos_inventario = ($verify_permissions == "inventory") ? modelInventario::getAllProducts() : modelInventario::getProductsCategory($this->category_store);
         $total_inventory = modelInventario::getTotalInventory();
         $comparative = self::comparativeInventory(date("Y-m-d"));
 
-        $render = view("menuDashboard.inventory", ["rol" => $rol, "productos" => $productos_inventario, "total" => $total_inventory, "comparativo" => $comparative])->render();
+        $render = view("menuDashboard.inventory", ["permission" => $verify_permissions, "productos" => $productos_inventario, "total" => $total_inventory, "comparativo" => $comparative])->render();
 
         return response()->json(["status" => true, "html" => $render]);
     }

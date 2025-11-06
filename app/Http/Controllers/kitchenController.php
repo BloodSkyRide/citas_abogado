@@ -123,32 +123,47 @@ class kitchenController extends Controller
     public function getShowKitchen(Request $request)
     {
 
-        $permissions = Permission::getPermision($request);
-        $verify_permissions = Permission::verifyPermission("contability", $permissions);
+
         $token_header = $request->header("Authorization");
 
         $replace = str_replace("Bearer ", "", $token_header);
 
         $decode_token = JWTAuth::setToken($replace)->authenticate();
 
-        $cedula = $decode_token['cedula'];
-        $role = $decode_token['rol'];
+        // $cedula = $decode_token['cedula'];
+        // $role = $decode_token['rol'];
         $today = date('Y-m-d');
 
         $orders = modelKitchen::getOrdersToday($today);
         $orders_sum = modelKitchen::unitOrderKitchen($today);
         $order_comparative = self::comparative($today);
 
-        $render = view("menuDashboard.historyOrderKitchen", [
-            "orders" => $orders,
-            'id' => $cedula,
-            "orders_sum" => $orders_sum,
-            "rol" => $role,
-            "comparativo" => $order_comparative
-        ])->render();
+        $permissions = Permission::getPermision($request);
+        $verify_permissions = Permission::verifyPermission("kitchen", $permissions);
+        
+        if($verify_permissions === "kitchen"){
+
+            $render = view("menuDashboard.historyOrderKitchen", [
+                "orders" => $orders,
+                'permission' => $verify_permissions,
+                "orders_sum" => $orders_sum,
+                "comparativo" => $order_comparative
+            ])->render();
+    
+        }else if($verify_permissions === "kitchen.searcher"){
+
+                $render = view("menuDashboard.historyOrderKitchen", [
+                "orders" => $orders,
+                'permission' => $verify_permissions,
+                "orders_sum" => $orders_sum,
+                "comparativo" => $order_comparative
+            ])->render();
+
+        }
+    
+            return response()->json(["status" => true, "html" => $render]);
 
 
-        return response()->json(["status" => true, "html" => $render]);
     }
 
 

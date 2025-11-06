@@ -9,7 +9,9 @@
         </div>
         <!-- /.card-header -->
         <div class="card-body">
-            
+
+            @if ($permisos == "schedules")
+                
             <div class="d-flex">
 
                 <div class="form-group" style="max-width: 200px;">
@@ -26,9 +28,8 @@
                     <button class="btn btn-info " onclick="searchRangeAssist()"><i class="fa-solid fa-magnifying-glass"></i>&nbsp;&nbsp;Buscar Rango</button>
                   </div>
 
-
-
             </div>
+            @endif
 
 
             <table class="table table-striped" id="report_table">

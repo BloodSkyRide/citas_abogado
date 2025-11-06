@@ -6,7 +6,7 @@
                                 <li class="nav-item">
 
                                     @php
-                                        $texto = $rol == 'administrador' ? 'Modificar/inventario' : 'inventario';
+                                        $texto = $permission == 'inventory' ? 'Modificar/inventario' : 'inventario';
                                     @endphp
                                     <a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill"
                                         href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home"
@@ -35,7 +35,7 @@
                                 <div class="tab-pane fade show active" id="custom-tabs-one-home" role="tabpanel"
                                     aria-labelledby="custom-tabs-one-home-tab">
 
-                                    @if ($rol == 'administrador')
+                                    @if ($permission == 'inventory')
                                         <hr>
                                         <center>
                                             <h4 class="text-secondary"><i
@@ -111,7 +111,7 @@
                                             <thead class="thead-dark">
                                                 <tr>
                                                     <th scope="col">#</th>
-                                                    @if ($rol == 'administrador')
+                                                    @if ($permission == 'inventory')
                                                         <th scope="col">Información producto</th>
                                                     @endif
                                                     <th scope="col">Nombre Producto</th>
@@ -138,7 +138,7 @@
                                                     @endphp
                                                     <tr>
                                                         <th scope="row">{{ $flagg }}</th>
-                                                        @if ($rol == 'administrador')
+                                                        @if ($permission == 'inventory')
                                                             <td><a onclick="openModalInfoInventory('{{ $producto['id_item'] }}', '{{ $producto['nombre'] }}','{{ $producto['unidades_disponibles'] }}')"
                                                                     title="Información/edición" type="button"
                                                                     class="btn btn-info"><i

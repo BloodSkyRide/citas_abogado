@@ -1236,14 +1236,49 @@ async function openModalUser(cedula, url) {
 
         document.getElementById("title_modal").style.fontWeight = "bold";
 
-        $(".select2").select2();
-        $(".select2bs4").select2({
-            theme: "bootstrap4",
-        });
+        const select = $(".select2-purple");
 
-        $("#select_labor_edit")
-            .val(data.datos[0].id_labor)
-            .trigger("change.select2");
+        select.empty();
+        data.establecidos.forEach((op) => {
+
+
+            const existe = data.permisos.some((per) => op.includes(per+'.'));
+
+            if (!existe) {
+                select.append(new Option(op, op, false, false));
+            }
+        });
+        select.select2({
+            placeholder: "Seleccionar permisos",
+            allowClear: true,
+            multiple: true,
+        });
+        // $(".select2bs4").select2({
+        //     theme: "pruple",
+        // });
+        // Espera a que Select2 renderice completamente
+        setTimeout(() => {
+            // Limpia cualquier selección anterior
+            select.val(null).trigger("change");
+
+            // Fuerza selección individual para cada permiso
+            data.permisos.forEach((permiso) => {
+                select
+                    .find(`option[value="${permiso}"]`)
+                    .prop("selected", true);
+                select.trigger({
+                    type: "select2:select",
+                    params: {
+                        data: { id: permiso, text: permiso },
+                    },
+                });
+            });
+
+            // Refresca visualmente Select2
+            select.trigger("change");
+
+            console.log("✅ Permisos aplicados forzadamente:", select.val());
+        }, 200);
 
         document.getElementById("selector_rol").value = data.datos[0].rol;
 
@@ -1266,6 +1301,12 @@ async function modifyUser(url) {
 
     formu.append("cedula", id);
 
+    const permisos = $("#modal_edit")
+        .find(".select2-purple")
+        .select2("data")
+        .map((item) => item.id);
+
+    formu.append("permisos", permisos);
     let jsonObject = {};
 
     formu.forEach((value, key) => {
@@ -1274,6 +1315,7 @@ async function modifyUser(url) {
         }
         jsonObject[key] = value;
     });
+    console.log(jsonObject);
 
     const token = localStorage.getItem("access_token");
     let response = await fetch(url, {
@@ -2367,28 +2409,28 @@ function verifyItems() {
     let precio = document.getElementById("precio_producto");
     let description = document.getElementById("descripcion_textarea");
     let categoria = document.getElementById("category");
-    let type_product = document.getElementById('type_product');
-    
+    let type_product = document.getElementById("type_product");
+
     let retorno = 0;
 
     let items = getDataProduct();
 
-    if(type_product.value === "selected") retorno++;
-    if(items.length < 1) retorno++;
+    if (type_product.value === "selected") retorno++;
+    if (items.length < 1) retorno++;
 
     let data = [nombre, precio, description, categoria];
 
     data.forEach((item) => {
         if (item.value === "" || item.value === " ") retorno++;
     });
-    console.log("el retorno es "+retorno);
+    console.log("el retorno es " + retorno);
     return retorno;
 }
 
 async function saveProduct(url) {
-    if (verifyItems() > 0) {asdsad
+    if (verifyItems() > 0) {
+        asdsad;
         Swal.fire({
-
             title: "¡UUps!",
             text: "verifica que todos los campos esten correctamente diligenciados",
             icon: "error",

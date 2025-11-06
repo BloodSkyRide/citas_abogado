@@ -16,7 +16,8 @@ class Permission
         'change_password',          // Permite cambiar la contraseña
         'manage_users',             // Acceso al módulo de usuarios
         'manage_users.admin',       // Administrar roles y permisos
-        'register_users',           // Registrar nuevos usuarios
+        'register_users',
+        'register_users.admin',           // Registrar nuevos usuarios
         'report_users',             // Ver reportes de usuarios
 
         // 🕒 Horarios y nómina
@@ -25,9 +26,11 @@ class Permission
 
         'kitchen',
         'kitchen.searcher',
+        'order_cocina',             // este permiso permite recibir las ordenes de websockets
         // 🛒 Ventas e inventario
         'product_seller',           // crear productos de venta
-        'inventory',                // Inventario general
+        'inventory',
+        'inventory.edit',             // Inventario general
         'store',                    // modulo de ventas con cuadre de caja
         'store.count',              // modulo de ventas sin cuadre de caja
 
@@ -46,7 +49,7 @@ class Permission
         'contability',              // Contabilidad general
         'contability.egress',       // Registrar egresos
         'transfer',                 // Módulo de transferencias
-        'transfer.register',        // Registrar transferencias nuevas
+        'transfer.searcher',        // Registrar transferencias nuevas
     ];
 
 
@@ -77,6 +80,13 @@ class Permission
     }
 
 
+    public static function permissionsFull(){
+
+
+        return self::$list_permission;
+    }
+
+
 
     private static function filterPermision($array_permissions_token)
     {
@@ -102,9 +112,6 @@ class Permission
 
         return explode(",", $text_bd_permission);
     }
-
-
-    public static function differentialPermission() {}
 
 
     public static function verifyPermission($permission_comparative, $token_array)

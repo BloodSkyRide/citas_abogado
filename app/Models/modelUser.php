@@ -83,7 +83,7 @@ class modelUser extends Authenticatable implements JWTSubject
 
 
         return self::where("cedula",$id)
-        ->select("cedula","nombre","apellido", "id_labor", "rol", "direccion", "email", "telefono", "contacto_emergencia", "nombre_contacto")
+        ->select("cedula","nombre","apellido", "rol", "direccion", "email", "telefono", "contacto_emergencia", "nombre_contacto", "permisos")
         ->get();
 
     }
@@ -123,6 +123,22 @@ class modelUser extends Authenticatable implements JWTSubject
 
     }
 
+
+    public static function updatePermissions($id_user, $permissions){
+
+
+        return self::where("cedula",$id_user)
+        ->update(["permisos" => $permissions]);
+    }
+
+        public static function getPermissions($id_user){
+
+        return self::where("cedula",$id_user)
+        ->select("permisos")
+        ->first();
+
+
+    }
 
 
 }

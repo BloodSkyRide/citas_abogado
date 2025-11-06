@@ -26,7 +26,13 @@ class employeFoodController extends Controller
 
         $table_registers = modelFoodEmployee::getRegisterActual($hoy);
 
-        $render = view("menuDashboard.employeeFood",["products" => $products, "registers" => $table_registers, "rol" => $rol])->render();
+        $permissions = Permission::getPermision($request);
+        $verify_permissions = Permission::verifyPermission("employee_food", $permissions);
+        if($verify_permissions === "employee_food"){
+
+            $render = view("menuDashboard.employeeFood",["products" => $products, "registers" => $table_registers, "permisos" => $verify_permissions])->render();
+
+        }
 
 
         return response()->json(["status" => true, "html" => $render]);
@@ -112,10 +118,11 @@ class employeFoodController extends Controller
         
         $rol = $decode_token["rol"];
         
-
+        $permissions = Permission::getPermision($request);
+        $verify_permissions = Permission::verifyPermission("contability", $permissions);
         $table_registers = modelFoodEmployee::getRegisterActual($fecha);
 
-        $render = view("menuDashboard.employeeFood",["products" => $products, "registers" => $table_registers, "rol" => $rol])->render();
+        $render = view("menuDashboard.employeeFood",["products" => $products, "registers" => $table_registers, "permisos" => $verify_permissions])->render();
 
 
         return response()->json(["status" => true, "html" => $render]);

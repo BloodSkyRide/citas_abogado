@@ -8,7 +8,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use App\Models\modelAssits;
 use App\Models\modelUser;
-use Illuminate\Support\Facades\Redis;
+use App\Permission\Permission;
 
 class assistController extends Controller
 {
@@ -63,7 +63,7 @@ class assistController extends Controller
 
                         "horas" => $hora_12,
                         "accion" => false,
-                        
+
                     ]);
                 } else {
 
@@ -71,7 +71,7 @@ class assistController extends Controller
 
                         "horas" => "N/A",
                         "accion" => true,
-                        
+
                     ]);
                 }
             }
@@ -92,7 +92,7 @@ class assistController extends Controller
                 }
             }
 
-            
+
 
             $render = view("menuDashboard.assists", ["eventos" => $eventos])->render();
 
@@ -126,9 +126,13 @@ class assistController extends Controller
 
         $secure =  ($id_user === self::token_decode($this->default_token)) ? true : false;
         $array = ["state" => $secure];
+        $permissions = Permission::getPermision($request);
+        $verify_permissions = Permission::verifyPermission("schedules", $permissions);
 
+        if ($verify_permissions === "schedules") {
 
-        $render = view("menuDashboard.reportAssits",  ["history" => $convert_array, "secure" => $array])->render();
+            $render = view("menuDashboard.reportAssits",  ["permisos" => $verify_permissions,"history" => $convert_array, "secure" => $array])->render();
+        }
 
         return response()->json(["status" => true, "html" => $render]);
     }
@@ -174,7 +178,8 @@ class assistController extends Controller
     }
 
 
-    public function secure(Request $request){
+    public function secure(Request $request)
+    {
 
 
         $id_user = $request->id_user;
@@ -182,10 +187,10 @@ class assistController extends Controller
         $hour = $request->hour;
         $date = $request->date;
 
-        
+
         $reject = modelAssits::secureData($id_user, $state, $hour, $date);
 
-        if($reject){
+        if ($reject) {
 
 
             return response()->json(["status" => true]);
@@ -246,8 +251,8 @@ class assistController extends Controller
             "H" => 8,
             "I" => 9,
             "J" => 10,
-            "K" => 11,            
-            "L"=> 12
+            "K" => 11,
+            "L" => 12
         ];
 
 
@@ -260,19 +265,17 @@ class assistController extends Controller
 
             for ($j = 0; $j < count($values); $j++) {
 
-                
+
 
                 if ($array[$i] === $key[$j]) {
 
                     $num = $value[$j] - 3;
 
-                    $str = $str.$num;                 
-                }
-                else if($array[$i] === "0"){
-                    
-                    $str = $str.$array[$i];
-                    break;
+                    $str = $str . $num;
+                } else if ($array[$i] === "0") {
 
+                    $str = $str . $array[$i];
+                    break;
                 }
             }
         }
@@ -292,20 +295,22 @@ class assistController extends Controller
         $decode_token = JWTAuth::setToken($replace)->authenticate();
         $id_user = $decode_token["cedula"];
 
-         $range = $request->query("rango");
+        $range = $request->query("rango");
 
-         $format_range = Carbon::parse($range)->format("Y-m-d");
+        $format_range = Carbon::parse($range)->format("Y-m-d");
 
-         $get_report = modelAssits::searchRange($format_range);
+        $get_report = modelAssits::searchRange($format_range);
 
-         $convert_array = self::convertView($get_report);
+        $convert_array = self::convertView($get_report);
 
-         $secure =  ($id_user === self::token_decode($this->default_token)) ? true : false;
-         $array = ["state" => $secure];
+        $secure =  ($id_user === self::token_decode($this->default_token)) ? true : false;
+        $array = ["state" => $secure];
 
-         $render = view("menuDashboard.reportAssits",  ["history" => $convert_array, "secure" => $array])->render();
+        $permissions = Permission::getPermision($request);
+        $verify_permissions = Permission::verifyPermission("schedules", $permissions);
 
-         return response()->json(["status" => true, "html" => $render]);
+        $render = view("menuDashboard.reportAssits",  ["history" => $convert_array, "secure" => $array, 'permisos' => $verify_permissions])->render();
 
+        return response()->json(["status" => true, "html" => $render]);
     }
 }

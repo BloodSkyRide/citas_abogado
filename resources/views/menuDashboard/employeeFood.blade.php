@@ -47,7 +47,7 @@
                 <h3>Alimentación entregada</h3>
             </center>
 
-            @if ($rol === 'administrador')
+            @if ($permisos === 'employee_food')
             <div class="form-group d-flex mt-2 mb-2">
                 <div>
     

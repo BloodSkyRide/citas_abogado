@@ -12,7 +12,7 @@ use App\Models\modelReservations;
 use App\Models\modelTransfer;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Str;
-
+use App\Permission\Permission;
 use Illuminate\Http\Request;
 
 class guestController extends Controller
@@ -39,7 +39,13 @@ class guestController extends Controller
         $guests = modelGuest::getGuest($fecha);
         $total_guests_sell = modelGuest::totalSellGuests($fecha);
         $reserevations = modelReservations::getReservations($fecha);
-        $render = view("menuDashboard.guest", ["rol" => $rol, "guests" => $guests, "total" => $total_guests_sell, "reservations" => $reserevations])->render();
+        $permissions = Permission::getPermision($request);
+        $verify_permissions = Permission::verifyPermission("hotel", $permissions);
+
+        if ($verify_permissions === "hotel" || $verify_permissions === "hotel.egress") {
+
+            $render = view("menuDashboard.guest", ["permisos" => $verify_permissions, "guests" => $guests, "total" => $total_guests_sell, "reservations" => $reserevations])->render();
+        }
 
         return response()->json(["status" => true, "html" => $render]);
     }
@@ -276,7 +282,9 @@ class guestController extends Controller
         $guests = modelGuest::getGuest($fecha);
         $total_guests_sell = modelGuest::totalSellGuests($fecha);
         $reserevations = modelReservations::getReservations($fecha);
-        $render = view("menuDashboard.guest", ["rol" => $rol, "guests" => $guests, "total" => $total_guests_sell, "reservations" => $reserevations])->render();
+        $permissions = Permission::getPermision($request);
+        $verify_permissions = Permission::verifyPermission("contability", $permissions);
+        $render = view("menuDashboard.guest", ["permisos" => $verify_permissions, "guests" => $guests, "total" => $total_guests_sell, "reservations" => $reserevations])->render();
 
         return response()->json(["status" => true, "html" => $render]);
     }
@@ -423,8 +431,13 @@ class guestController extends Controller
             $time = date('H:i:s');
 
 
-            $data_change = ["fecha" => $hoy, "hora" => $time, "cajero_responsable" => $cajero, "id_cajero" => $id_cajero, 
-            "descripcion" => "Abono reservacion de $tittle_reservation con cedula: $tittle_id"];
+            $data_change = [
+                "fecha" => $hoy,
+                "hora" => $time,
+                "cajero_responsable" => $cajero,
+                "id_cajero" => $id_cajero,
+                "descripcion" => "Abono reservacion de $tittle_reservation con cedula: $tittle_id"
+            ];
 
             $charge_transfer = modelTransfer::setTransfer($id_transfer, $data_change);
         }

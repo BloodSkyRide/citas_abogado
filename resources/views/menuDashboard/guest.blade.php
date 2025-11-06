@@ -1,6 +1,6 @@
 <div class="container-fluid">
 
-    @if ($rol === 'administrador')
+    @if ($permisos === 'hotel')
         <div class="form-group d-flex">
             <div>
 

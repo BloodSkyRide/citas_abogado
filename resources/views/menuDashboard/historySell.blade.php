@@ -1,6 +1,6 @@
 <div class="d-flex justify-contente-center">
 
-    @if ($rol === 'administrador'|| $rol === 'super admin')
+    @if ($permisos === 'history_sell')
         <div class="form-group d-flex">
             <div>
 
@@ -121,7 +121,7 @@
                     </center>
 
 
-                    @if ($rol === 'administrador'|| $rol === 'super admin')
+                    @if ($permisos === 'history_sell')
 
                         <div class="table-responsive">
                             <table class="table">

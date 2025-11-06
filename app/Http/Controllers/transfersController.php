@@ -7,6 +7,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Models\modelTransfer;
 use App\Models\transfersTotalModel;
 use Carbon\Carbon;
+use App\Permission\Permission;
 
 class transfersController extends Controller
 {
@@ -30,11 +31,27 @@ class transfersController extends Controller
         $total_detail = modelTransfer::sumTransfers($today);
 
         $total_transfers = transfersTotalModel::totalSum($year, $month, $day);
+        $permissions = Permission::getPermision($request);
+        $verify_permissions = Permission::verifyPermission("transfer", $permissions);
 
-        $render = view("menuDashboard.transfers", ["transferencias_mes" => $get_transfers_month, 
-        "transfers_today" => $get_detail_transfers,
-        "total_detail" => $total_detail,
-        "total_transferencias" => $total_transfers])->render();
+        if ($verify_permissions === "transfer") {
+
+            $render = view("menuDashboard.transfers", [
+                "permisos" => $verify_permissions,
+                "transferencias_mes" => $get_transfers_month,
+                "transfers_today" => $get_detail_transfers,
+                "total_detail" => $total_detail,
+                "total_transferencias" => $total_transfers
+            ])->render();
+        } else if ($verify_permissions === "transfer.searcher") {
+
+
+            $render = view("menuDashboard.transfers", [
+                "permisos" => $verify_permissions,
+                "transfers_today" => $get_detail_transfers,
+                "total_detail" => $total_detail,
+            ])->render();
+        }
 
 
         return response()->json(["status" => true, "html" => $render]);
@@ -93,14 +110,14 @@ class transfersController extends Controller
     {
 
         $imagen = $request->file("image");
-    
+
         // Nombre final del archivo
         $name_final = pathinfo($imagen->getClientOriginalName(), PATHINFO_FILENAME) . "_" . Carbon::now()->format('Y-m-d_H-i-s') . ".jpg";
         $full_path = storage_path("app/public/transfers/" . $name_final);
-    
+
         // Optimizar imagen antes de guardarla
         $this->optimizeImage($imagen, $full_path);
-    
+
         return "storage/transfers/" . $name_final;
     }
 
@@ -147,8 +164,9 @@ class transfersController extends Controller
 
 
 
-    public function searchForRangeTransfers(Request $request){
-        
+    public function searchForRangeTransfers(Request $request)
+    {
+
 
 
         $token_header = $request->header("Authorization");
@@ -183,13 +201,18 @@ class transfersController extends Controller
 
         $total_transfers = transfersTotalModel::totalSum($year, $month, $day);
 
-        $render = view("menuDashboard.transfers", ["transferencias_mes" => $get_transfers_month, 
-        "transfers_today" => $get_detail_transfers,
-        "total_detail" => $total_detail,
-        "total_transferencias" => $total_transfers])->render();
+        $permissions = Permission::getPermision($request);
+        $verify_permissions = Permission::verifyPermission("transfer", $permissions);
+
+        $render = view("menuDashboard.transfers", [
+            "permisos" => $verify_permissions,
+            "transferencias_mes" => $get_transfers_month,
+            "transfers_today" => $get_detail_transfers,
+            "total_detail" => $total_detail,
+            "total_transferencias" => $total_transfers
+        ])->render();
 
 
         return response()->json(["status" => true, "html" => $render]);
-
     }
 }

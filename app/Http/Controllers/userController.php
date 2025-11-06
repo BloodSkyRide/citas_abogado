@@ -6,6 +6,7 @@ use App\Models\modelUser;
 use App\Models\labores;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Hash;
+use App\Permission\Permission; 
 
 use Illuminate\Http\Request;
 
@@ -17,8 +18,18 @@ class userController extends Controller
         $cedula = $request->cedula;
 
         $register = modelUser::getUserForId($cedula);
+        
+        $array_permission = self::explodeFunctionPermission($register[0]->permisos);
+        $permisos = Permission::permissionsFull();
+        
+        return response()->json(["status" => true, "datos" => $register, "permisos" => $array_permission, "establecidos" => $permisos]);
+    }
 
-        return response()->json(["status" => true, "datos" => $register]);
+
+    private function explodeFunctionPermission($permissions){
+
+        return explode(",",$permissions);
+
     }
 
 
@@ -32,10 +43,10 @@ class userController extends Controller
         $numero_contacto_emergencia = $request->form_num_emergencia;
         $nombre_contacto_emergencia = $request->nombre_emergencia_form;
         $nombre = $request->nombre_form;
-        $id_labor = $request->select_labor_edit;
         $rol = $request->selector_rol;
         $email = $request->email_form;
         $telefono = $request->my_numero;
+        $permisos = $request->permisos;
 
         $new_pass = $request->new_pass;
         $hash = Hash::make($new_pass);
@@ -50,13 +61,13 @@ class userController extends Controller
                 
                 "nombre" => $nombre,
                 "apellido" => $apellido,
-                "id_labor" => $id_labor,
                 "rol" => $rol,
                 "direccion" => $direccion,
                 "email" => $email,
                 "telefono" => $telefono,
                 "contacto_emergencia" => $numero_contacto_emergencia,
-                "nombre_contacto" => $nombre_contacto_emergencia
+                "nombre_contacto" => $nombre_contacto_emergencia,
+                "permisos" => $permisos
             ];
 
 
@@ -68,13 +79,13 @@ class userController extends Controller
                 "password" => $hash,
                 "nombre" => $nombre,
                 "apellido" => $apellido,
-                "id_labor" => $id_labor,
                 "rol" => $rol,
                 "direccion" => $direccion,
                 "email" => $email,
                 "telefono" => $telefono,
                 "contacto_emergencia" => $numero_contacto_emergencia,
-                "nombre_contacto" => $nombre_contacto_emergencia
+                "nombre_contacto" => $nombre_contacto_emergencia,
+                "permisos" => $permisos
             ];
 
         }
@@ -91,9 +102,14 @@ class userController extends Controller
 
             $users = self::convertArrayforView();
 
+
+
             $array_labores = labores::getLabores();
 
-            $render = view("menuDashboard.usersView", ["users" => $users, "labores" => $array_labores])->render();
+            $permissions = Permission::getPermision($request);
+            $verify_permissions = Permission::verifyPermission("manage_users", $permissions);
+
+            $render = view("menuDashboard.usersView", ["permisos" => $verify_permissions,"users" => $users, "labores" => $array_labores])->render();
 
 
             return response()->json(["status" => true, "html" => $render]);
@@ -140,7 +156,6 @@ class userController extends Controller
 
         foreach ($users as $item) {
 
-            $name_labor = labores::getNameLabor($item->id_labor);
 
 
             array_push($data, [
@@ -149,19 +164,18 @@ class userController extends Controller
                 "nombre" => $item->nombre,
                 "apellido" => $item->apellido,
                 "rol" => $item->rol,
-                "nombre_labor" => $name_labor->nombre_labor,
-                "id_labor" => $item->id_labor,
                 "direccion" => $item->direccion,
                 "email" => $item->email,
                 "contacto_emergencia" => $item->contacto_emergencia,
                 "nombre_contacto" => $item->nombre_contacto,
                 "telefono" => $item->telefono,
+                "permisos" => $item->permisos,
                 "fecha_registro" => $item->fecha_registro,
 
             ]);
         }
 
-
+        
         return $data;
     }
 
