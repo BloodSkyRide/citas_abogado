@@ -141,7 +141,7 @@ class dashboardController extends Controller
             switch ($rol) {
                 case 'usuario':
 
-                    $permisos = "change_password,kitchen,inventory.edit,history_sell.searcher,kitchen.searcher,store,hotel.searcher,transfer.searcher,contability.egress,employee_food.searcher,schedules";
+                    $permisos = "change_password,inventory.edit,history_sell.searcher,kitchen.searcher,store,hotel.searcher,transfer.searcher,contability.egress,employee_food.searcher,schedules";
 
                     break;
 
