@@ -163,7 +163,7 @@
 
                                                     $button_start = '';
                                                     $button_end = '';
-                                                    if ($id == '1093228865' || $id == '1091272724') {
+                                                    if ($permission == 'kitchen') {
                                                         $button_start =
                                                             '<a type="button" title="cambiar estado" onclick="openModalKitchen(' .
                                                             $item['id_pedido'] .
