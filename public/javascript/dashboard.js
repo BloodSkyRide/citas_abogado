@@ -88,7 +88,7 @@ echo.channel("realtime-channel") // El nombre del canal debe coincidir con lo qu
                     $("#custom-toast-container").append($toast);
                 }
             }, 150);
-        } else if (role !== "administrador" && data.tipo === "devolucion") {
+        } else if (get_permission !== "order_cocina" && data.tipo === "devolucion") {
             playNotificationSound2();
 
             $(document).Toasts("create", {
