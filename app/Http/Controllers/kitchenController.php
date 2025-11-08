@@ -223,12 +223,11 @@ class kitchenController extends Controller
 
         $replace = str_replace("Bearer ", "", $token_header);
 
-        $decode_token = JWTAuth::setToken($replace)->authenticate();
+        $permissions = Permission::getPermision($request);
+        $verify_permissions = Permission::verifyPermission("order_cocina", $permissions);
 
-        $self_id = $decode_token['cedula'];
 
-
-        return response()->json(["status" => true, "id_access" => $self_id]);
+        return response()->json(["status" => true, "order_access" => $verify_permissions]);
     }
 
 

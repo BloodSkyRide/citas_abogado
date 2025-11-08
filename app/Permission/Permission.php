@@ -32,7 +32,6 @@ class Permission
         'inventory',
         'inventory.edit',             // Inventario general
         'store',                    // modulo de ventas con cuadre de caja
-        'store.count',              // modulo de ventas sin cuadre de caja
 
         // 📊 Historial
         'history_sell',             // Historial general de ventas

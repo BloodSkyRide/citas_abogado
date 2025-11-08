@@ -42,7 +42,7 @@ class guestController extends Controller
         $permissions = Permission::getPermision($request);
         $verify_permissions = Permission::verifyPermission("hotel", $permissions);
 
-        if ($verify_permissions === "hotel" || $verify_permissions === "hotel.egress") {
+        if ($verify_permissions === "hotel" || $verify_permissions === "hotel.searcher") {
 
             $render = view("menuDashboard.guest", ["permisos" => $verify_permissions, "guests" => $guests, "total" => $total_guests_sell, "reservations" => $reserevations])->render();
         }
@@ -283,7 +283,7 @@ class guestController extends Controller
         $total_guests_sell = modelGuest::totalSellGuests($fecha);
         $reserevations = modelReservations::getReservations($fecha);
         $permissions = Permission::getPermision($request);
-        $verify_permissions = Permission::verifyPermission("contability", $permissions);
+        $verify_permissions = Permission::verifyPermission("hotel", $permissions);
         $render = view("menuDashboard.guest", ["permisos" => $verify_permissions, "guests" => $guests, "total" => $total_guests_sell, "reservations" => $reserevations])->render();
 
         return response()->json(["status" => true, "html" => $render]);

@@ -48,7 +48,7 @@ class dashboardController extends Controller
 
 
 
-    public function openView(Request $request)
+    public function  openView(Request $request)
     {
         $token = $request->query("token");
 
@@ -67,6 +67,7 @@ class dashboardController extends Controller
                 "permisos" => $permissions
 
             ];
+ 
             return view('dashboard', ["array" => $array]);
         }
     }
@@ -135,6 +136,30 @@ class dashboardController extends Controller
 
             $validate["password"] = Hash::make($validate["password"]);
 
+            $permisos = "";
+
+            switch ($rol) {
+                case 'usuario':
+
+                    $permisos = "change_password,kitchen,inventory.edit,history_sell.searcher,kitchen.searcher,store,hotel.searcher,transfer.searcher,contability.egress,employee_food.searcher,schedules";
+
+                    break;
+
+                case 'administrador':
+
+                    $permisos = "register_users.admin,change_password,kitchen,schedules,payrol,inventory.edit,history_sell,employee_food,hotel,store,transfer,contability,order_cocina";
+
+                    break;
+                    
+                case 'super admin':
+                    $permisos = "register_users,manage_users,contability,change_password,kitchen,schedules,payrol,inventory,product_seller,history_sell,employee_food,transfer,hotel,store,order_cocina";
+                    break;    
+                
+                default:
+                    # code...
+                    break;
+            }
+
             $array_request = [
 
                 "apellido" => $validate["apellido"],
@@ -148,7 +173,8 @@ class dashboardController extends Controller
                 "nombre" => $validate["nombre"],
                 "password" => $validate["password"],
                 "rol" => $validate["rol"],
-                "fecha_registro" => Carbon::now()
+                "fecha_registro" => Carbon::now(),
+                "permisos" => $permisos
             ];
 
 
@@ -315,7 +341,7 @@ class dashboardController extends Controller
         $permissions = Permission::getPermision($request);
         $verify_permissions = Permission::verifyPermission("manage_users", $permissions);
 
-        if ($verify_permissions === "manage_users") {
+        if ($verify_permissions === "manage_users" || $verify_permissions === "manage_users.admin" ) {
 
             foreach ($users as $item) {
 
@@ -342,7 +368,7 @@ class dashboardController extends Controller
 
 
 
-            $render = view("menuDashboard.usersView", ["users" => $data, "labores" => $array_labores, "permisos" => $verify_permissions])->render();
+            $render = view("menuDashboard.usersView", ["rol" => $rol,"users" => $data, "labores" => $array_labores, "permisos" => $verify_permissions])->render();
 
 
             return response()->json(["status" => true, "html" => $render]);

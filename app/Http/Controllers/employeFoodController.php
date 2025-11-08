@@ -28,7 +28,7 @@ class employeFoodController extends Controller
 
         $permissions = Permission::getPermision($request);
         $verify_permissions = Permission::verifyPermission("employee_food", $permissions);
-        if($verify_permissions === "employee_food"){
+        if($verify_permissions === "employee_food" || $verify_permissions === "employee_food.searcher"){
 
             $render = view("menuDashboard.employeeFood",["products" => $products, "registers" => $table_registers, "permisos" => $verify_permissions])->render();
 
@@ -119,7 +119,7 @@ class employeFoodController extends Controller
         $rol = $decode_token["rol"];
         
         $permissions = Permission::getPermision($request);
-        $verify_permissions = Permission::verifyPermission("contability", $permissions);
+        $verify_permissions = Permission::verifyPermission("employee_food", $permissions);
         $table_registers = modelFoodEmployee::getRegisterActual($fecha);
 
         $render = view("menuDashboard.employeeFood",["products" => $products, "registers" => $table_registers, "permisos" => $verify_permissions])->render();

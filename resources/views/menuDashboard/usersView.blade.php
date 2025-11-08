@@ -31,40 +31,38 @@
                     <tbody>
 
                         @foreach ($users as $item)
-                            @if ($item['rol'] === 'administrador' || $item['rol'] === 'usuario')
-                                <tr>
-                                    <td>
+                            <tr>
+                                <td>
 
-                                        <a type="button"
-                                            onclick="openModalUser('{{ $item['cedula'] }}','{{ route('getUserForId') }}')"><i
-                                                class="fa-solid fa-user-pen"></i>&nbsp;&nbsp;<span
-                                                class="badge bg-success">{{ $item['cedula'] }}</span></a>
-                                    </td>
+                                    <a type="button"
+                                        onclick="openModalUser('{{ $item['cedula'] }}','{{ route('getUserForId') }}')"><i
+                                            class="fa-solid fa-user-pen"></i>&nbsp;&nbsp;<span
+                                            class="badge bg-success">{{ $item['cedula'] }}</span></a>
+                                </td>
 
-                                    <td>{{ $item['nombre'] }}</td>
-                                    <td>{{ $item['apellido'] }}</td>
-                                    <td>
-                                        @php
-                                            $text = $item['rol'] !== 'usuario' ? 'info' : 'warning';
-                                            $icon =
-                                                $item['rol'] !== 'usuario'
-                                                    ? '<i class="fa-solid fa-user-tie"></i>'
-                                                    : '<i class="fa-solid fa-user"></i>';
-                                        @endphp
+                                <td>{{ $item['nombre'] }}</td>
+                                <td>{{ $item['apellido'] }}</td>
+                                <td>
+                                    @php
+                                        $text = $item['rol'] !== 'usuario' ? 'info' : 'warning';
+                                        $icon =
+                                            $item['rol'] !== 'usuario'
+                                                ? '<i class="fa-solid fa-user-tie"></i>'
+                                                : '<i class="fa-solid fa-user"></i>';
+                                    @endphp
 
-                                        <span
-                                            class="badge bg-{{ $text }}">{!! $icon !!}&nbsp;&nbsp;{{ $item['rol'] }}</span>
+                                    <span
+                                        class="badge bg-{{ $text }}">{!! $icon !!}&nbsp;&nbsp;{{ $item['rol'] }}</span>
 
-                                    </td>
-                                    <td>{{ $item['direccion'] }}</td>
-                                    <td>{{ $item['email'] }}</td>
-                                    <td>{{ $item['contacto_emergencia'] }}</td>
-                                    <td>{{ $item['nombre_contacto'] }}</td>
-                                    <td>{{ $item['telefono'] }}</td>
-                                    <td>{{ $item['permisos'] }}</td>
-                                    <td>{{ $item['fecha_registro'] }}</td>
-                                </tr>
-                            @endif
+                                </td>
+                                <td>{{ $item['direccion'] }}</td>
+                                <td>{{ $item['email'] }}</td>
+                                <td>{{ $item['contacto_emergencia'] }}</td>
+                                <td>{{ $item['nombre_contacto'] }}</td>
+                                <td>{{ $item['telefono'] }}</td>
+                                <td>{{ $item['permisos'] }}</td>
+                                <td>{{ $item['fecha_registro'] }}</td>
+                            </tr>
                         @endforeach
 
                     </tbody>
@@ -168,16 +166,19 @@
                                     @endforeach
 
                                 </select> --}}
-                                <div class="form-group" >
-                                    <label>Permisos:</label>
-                                    <div class="select2-purple">
-                                        <select class="select2" id="select_permission" name="select_permission" multiple="multiple" data-placeholder="Select a State" tabindex="9999"
-                                            data-dropdown-css-class="select2-purple" style="width: 100%;">
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
 
+                                @if ($rol === 'super admin')
+                                    <div class="form-group">
+                                        <label>Permisos:</label>
+                                        <div class="select2-purple">
+                                            <select class="select2" id="select_permission" name="select_permission"
+                                                multiple="multiple" data-placeholder="Select a State" tabindex="9999"
+                                                data-dropdown-css-class="select2-purple" style="width: 100%;">
+                                            </select>
+                                        </div>
+                                    </div>
+                            </div>
+                            @endif
 
                             <div class="form-group">
                                 <label for="form_num_emergencia">Número del contacto de emergencia:</label>
@@ -185,21 +186,22 @@
                                     placeholder="Número de contacto..." name="form_num_emergencia">
                             </div>
 
+                            @if ($rol === 'super admin')
+                                <div class="form-group">
+                                    <label for="new_pass">Generar nueva contraseña:</label>
+                                    <div class="d-flex">
+                                        <input type="password" class="form-control" id="new_pass"
+                                            placeholder="contraseña nueva..." name="new_pass" autocomplete="off">
+                                        <a type="button" class="m-2" onclick="showPass(this.id, 'new_pass')"
+                                            id="showpass2">
 
-                            <div class="form-group">
-                                <label for="new_pass">Generar nueva contraseña:</label>
-                                <div class="d-flex">
-                                    <input type="password" class="form-control" id="new_pass"
-                                        placeholder="contraseña nueva..." name="new_pass" autocomplete="off">
-                                    <a type="button" class="m-2" onclick="showPass(this.id, 'new_pass')"
-                                        id="showpass2">
+                                            <i class="fa-solid fa-eye color_eye"></i>
 
-                                        <i class="fa-solid fa-eye color_eye"></i>
+                                        </a>
+                                    </div>
 
-                                    </a>
                                 </div>
-
-                            </div>
+                            @endif
                         </div>
 
                     </div>
@@ -217,14 +219,16 @@
                 <button type="button" class="btn btn-danger" data-dismiss="modal"><i
                         class="fa-solid fa-circle-xmark"></i>&nbsp;&nbsp;Cerrar</button>
 
-                <button type="button" class="btn btn-danger" data-dismiss="modal"
-                    onclick="deleteUser('{{ route('deleteUser') }}')"><i
-                        class="fa-solid fa-user-minus"></i>&nbsp;&nbsp;Eliminar Usuario</button>
+                @if ($rol === 'super admin')
 
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"
+                        onclick="deleteUser('{{ route('deleteUser') }}')"><i
+                            class="fa-solid fa-user-minus"></i>&nbsp;&nbsp;Eliminar Usuario</button>
 
-                <button type="button" class="btn btn-info" data-id="" id="button_save"
-                    onclick="modifyUser('{{ route('modifyUser') }}')"><i
-                        class="fa-solid fa-check"></i>&nbsp;&nbsp;Guardar cambios</button>
+                @endif
+                    <button type="button" class="btn btn-info" data-id="" id="button_save"
+                        onclick="modifyUser('{{ route('modifyUser') }}')"><i
+                            class="fa-solid fa-check"></i>&nbsp;&nbsp;Guardar cambios</button>
             </div>
         </div>
     </div>

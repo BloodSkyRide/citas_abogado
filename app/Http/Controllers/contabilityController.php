@@ -107,11 +107,8 @@ class contabilityController extends Controller
 
                 $render = view("menuDashboard.contability", [
                     "data" => $data,
-                    "total" => $total_venta,
                     "egresos" => $get_egresos,
-                    "total_egreso" => $get_total_egress,
                     "egress_detail" => $get_egress_deatail,
-                    "egress_total" => $total_egress_detail,
                     "permisos" => $verify_permissions
                 ])->render();
 

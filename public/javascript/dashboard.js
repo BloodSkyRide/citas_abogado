@@ -4,7 +4,7 @@ $(document).ready(function () {
 
 Pusher.logToConsole = true;
 let route = "https://intranetparadorrapi.com/cambiar-estado-button";
-let route2 = "https://intranetparadorrapi.com/verifyId";
+let route2 = "https://intranetparadorrapi.com/verifyPermission";
 
 var echo = new Echo({
     broadcaster: "pusher",
@@ -36,19 +36,16 @@ async function verifyUser() {
     let data = await response.json();
 
     if (data.status) {
-        return data.id_access;
+        return data.order_access;
     }
 }
 
 echo.channel("realtime-channel") // El nombre del canal debe coincidir con lo que usas en el backend
     .listen(".orderKitchen", async function (data) {
         let role = document.getElementById("role_h1").textContent;
-        let get_id = await verifyUser();
+        let get_permission = await verifyUser();
 
-        if (
-            (get_id == "1093228865" || get_id == "1091272724") &&
-            data.tipo === "pedido"
-        ) {
+        if ( (get_permission == "order_cocina" ) && data.tipo === "pedido") {
             await hablar(
                 `Tienes un pedido nuevo: ${data.amount} ${data.name_product} y porfavor ${data.description}`
             );
