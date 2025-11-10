@@ -106,21 +106,26 @@ echo.channel("realtime-channel") // El nombre del canal debe coincidir con lo qu
     });
 
 async function hablar(texto) {
-    // speechSynthesis.cancel(); // Detener cualquier lectura previa
     playNotificationSound();
+
     const mensaje = new SpeechSynthesisUtterance(texto);
-    mensaje.lang = "es-US"; // Idioma asociado a esa voz
-    mensaje.pitch = 1.5;
+    mensaje.lang = "es-ES"; // Más compatible con la mayoría de navegadores
+    mensaje.pitch = 1.2;
     mensaje.volume = 1;
 
     function asignarYHablar() {
         const voces = speechSynthesis.getVoices();
-        const vozGoogle = voces.find(
-            (v) => v.name === "Microsoft Raul - Spanish (Mexico)"
-        );
 
-        if (vozGoogle) {
-            mensaje.voice = vozGoogle;
+        // Busca una voz española disponible
+        const vozDisponible =
+            voces.find(v => v.lang.startsWith("es")) ||
+            voces.find(v => v.name.toLowerCase().includes("google")) ||
+            voces[0]; // fallback
+
+        if (vozDisponible) {
+            mensaje.voice = vozDisponible;
+        } else {
+            console.warn("No se encontró ninguna voz en español.");
         }
 
         speechSynthesis.speak(mensaje);
