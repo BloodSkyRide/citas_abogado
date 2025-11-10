@@ -280,7 +280,6 @@ class contabilityController extends Controller
     public function egressForDate(Request $request)
     {
 
-
         $fecha_buscar = $request->fecha;
 
         $token_header = $request->header("Authorization");
@@ -313,8 +312,9 @@ class contabilityController extends Controller
             $dia = Carbon::parse($fecha_buscar)->endOfMonth()->day;
 
             $confirmation = self::editDataContability($mes, $date_back);
-
-            if ($confirmation) {
+            $permissions = Permission::getPermision($request);
+            $verify_permissions = Permission::verifyPermission("contability", $permissions);
+            if ($verify_permissions === "contability") {
 
                 self::sumEgress($self_name);
                 $data = modelContability::getContabilityForMonth($anio, $mes, $dia);
@@ -336,7 +336,8 @@ class contabilityController extends Controller
                     "total_egreso" => $get_total_egress,
                     "egress_detail" => $get_egress_deatail,
                     "egress_total" => $total_egress_detail,
-                    "rol" => $rol
+                    "rol" => $rol,
+                    "permisos" => $verify_permissions
                 ])->render();
 
                 return response()->json(["status" => true, "html" => $render]);
