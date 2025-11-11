@@ -223,6 +223,9 @@
                             </tbody>
                         </table>
 
+                        <br>
+                        <label for="" id="type_product_tittle"></label>
+
                     </div>
 
                     <hr>

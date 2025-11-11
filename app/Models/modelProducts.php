@@ -126,4 +126,14 @@ class modelProducts extends Model
         ->first();
 
     }
+
+
+    public static function getTypeProduct($id_producto){
+
+
+        return self::where("id_producto",$id_producto)
+        ->first()
+        ->tipo_producto;
+
+    }
 }

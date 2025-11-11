@@ -3490,8 +3490,12 @@ async function openModalInfo(id_item, info_tittle, url) {
 
         productos_compuestos.forEach((item) => {
             body_table.innerHTML += `<td><center>${item.nombre_compuesto}</center></td>
-            <td><center>${item.descuento}</center></td>`;
+            <td><center>${item.descuento}</center></td>`
         });
+
+        document.getElementById("type_product_tittle").innerHTML = `Tipo de producto: ${data.type_product}`;
+
+        console.log("prueba: "+data.type_product)
 
         $("#modal_info").modal("show");
     }

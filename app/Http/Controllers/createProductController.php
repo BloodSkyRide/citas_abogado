@@ -393,8 +393,11 @@ class createProductController extends Controller
 
         $product_row = modelCompuesto::getComposed($id_product_venta);
 
+        $get_type_product = modelProducts::getTypeProduct($id_product_venta);
+        
 
-        return response()->json(["status" => true, "producto" => $product_row]);
+
+        return response()->json(["status" => true, "producto" => $product_row, "type_product" => $get_type_product]);
 
 
     }
