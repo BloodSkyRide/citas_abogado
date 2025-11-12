@@ -10,7 +10,7 @@ use App\Models\modelUser;
 use Carbon\Carbon;
 use App\Http\Controllers\dashboardController;
 use Tymon\JWTAuth\Facades\JWTAuth;
-use App\Permission\Permission; 
+use App\Permission\Permission;
 
 class historySellController extends Controller
 {
@@ -18,18 +18,19 @@ class historySellController extends Controller
     protected $rols;
 
 
-        public function __construct()
+    public function __construct()
     {
         $controller = new dashboardController();
         $this->rols = $controller->getRols();
     }
 
-    private function getCashPerson($date){
+    private function getCashPerson($date)
+    {
 
         $verify_sell = modelSell::verify_sell($date);
 
         $data_list = [];
-        foreach($verify_sell as $item){
+        foreach ($verify_sell as $item) {
 
 
             $name = modelUser::getUserName($item);
@@ -38,7 +39,7 @@ class historySellController extends Controller
             $total_transferencias = modelTransfer::getSumTransfersforUser($item, $date);
             $total_egresos = modelEgress::getEgressCaja($date, $item);
 
-            array_push($data_list,[
+            array_push($data_list, [
 
                 "cedula" => $item,
                 "nombre" => $name->nombre,
@@ -47,13 +48,12 @@ class historySellController extends Controller
                 "total_transferencia" =>  $total_transferencias,
                 "total_egresos" => $total_egresos
             ]);
-
         }
 
         return $data_list;
-
     }
-    public function getShowHistorySell(Request $request){
+    public function getShowHistorySell(Request $request)
+    {
 
 
         $token = $request->header("Authorization");
@@ -72,7 +72,7 @@ class historySellController extends Controller
         $self_transfers = modelTransfer::getSumTransfersforUser($self_id, $today);
 
         $history_sells = modelSell::getSells($today);
-        
+
         $total_venta = modelSell::totalSells($today);
 
         $total_venta_unificada = modelSell::unitTotalSells($today);
@@ -85,44 +85,44 @@ class historySellController extends Controller
         $permissions = Permission::getPermision($request);
         $verify_permissions = Permission::verifyPermission("history_sell", $permissions);
 
-        if($verify_permissions === "history_sell"){
-   
+        if ($verify_permissions === "history_sell" || $verify_permissions == "history_sell.full") {
+
             $total_sells_for_user = self::getCashPerson($today);
-            $render = view("menuDashboard.historySell", ["rol" => $rol, 
-            "historial" => $history_sells,
-            "permisos" => $verify_permissions, 
-            "total" => $total_venta, 
-            "unificado" => $total_venta_unificada, 
-            "users" => $total_venta_users,
-            "self_transfers" => $self_transfers,
-            "name" => $self_name,
-            "my_egress" => $total_caja_egress,
-            "my_sell" => $self_sell,
-            "total_users" => $total_sells_for_user,])->render();
+            $render = view("menuDashboard.historySell", [
+                "rol" => $rol,
+                "historial" => $history_sells,
+                "permisos" => $verify_permissions,
+                "total" => $total_venta,
+                "unificado" => $total_venta_unificada,
+                "users" => $total_venta_users,
+                "self_transfers" => $self_transfers,
+                "name" => $self_name,
+                "my_egress" => $total_caja_egress,
+                "my_sell" => $self_sell,
+                "total_users" => $total_sells_for_user,
+            ])->render();
+        } else if ($verify_permissions === "history_sell.searcher") {
 
-            
-
-        }else if ($verify_permissions === "history_sell.searcher"){
-
-            $render = view("menuDashboard.historySell", ["rol" => $rol, 
-            "historial" => $history_sells,
-            "permisos" => $verify_permissions,  
-            "total" => $total_venta, 
-            "unificado" => $total_venta_unificada, 
-            "users" => $total_venta_users,
-            "self_transfers" => $self_transfers,
-            "name" => $self_name,
-            "my_egress" => $total_caja_egress,
-            "my_sell" => $self_sell])->render();
-
+            $render = view("menuDashboard.historySell", [
+                "rol" => $rol,
+                "historial" => $history_sells,
+                "permisos" => $verify_permissions,
+                "total" => $total_venta,
+                "unificado" => $total_venta_unificada,
+                "users" => $total_venta_users,
+                "self_transfers" => $self_transfers,
+                "name" => $self_name,
+                "my_egress" => $total_caja_egress,
+                "my_sell" => $self_sell
+            ])->render();
         }
 
         return response()->json(["status" => true, "html" => $render]);
-
     }
 
 
-    public function searchForRangeHistory(Request $request){
+    public function searchForRangeHistory(Request $request)
+    {
 
         $token = $request->header("Authorization");
         $replace = str_replace("Bearer ", "", $token);
@@ -137,7 +137,7 @@ class historySellController extends Controller
         $today = $request->fecha;
 
         $history_sells = modelSell::getSells($today);
-        
+
         $total_venta = modelSell::totalSells($today);
 
         $total_venta_unificada = modelSell::unitTotalSells($today);
@@ -147,7 +147,7 @@ class historySellController extends Controller
         $self_transfers = modelTransfer::getSumTransfersforUser($self_id, $today);
 
         $history_sells = modelSell::getSells($today);
-        
+
         $total_venta = modelSell::totalSells($today);
 
         $total_venta_unificada = modelSell::unitTotalSells($today);
@@ -162,29 +162,75 @@ class historySellController extends Controller
         $verify_permissions = Permission::verifyPermission("history_sell", $permissions);
 
 
-        if($verify_permissions == "history_sell"){
+        if ($verify_permissions == "history_sell") {
 
 
             $total_sells_for_user = self::getCashPerson($today);
-    
+
             $render = view("menuDashboard.historySell", [
-             "permisos" => $verify_permissions,
-             "historial" => $history_sells, 
-             "total" => $total_venta, 
-             "unificado" => $total_venta_unificada, 
-             "users" => $total_venta_users,
-             "self_transfers" => $self_transfers,
-             "name" => $self_name,
-             "my_egress" => $total_caja_egress,
-             "my_sell" => $self_sell,
-             "total_users" => $total_sells_for_user,
-             "self_id" => $self_id
-             ])->render();
-    
+                "permisos" => $verify_permissions,
+                "historial" => $history_sells,
+                "total" => $total_venta,
+                "unificado" => $total_venta_unificada,
+                "users" => $total_venta_users,
+                "self_transfers" => $self_transfers,
+                "name" => $self_name,
+                "my_egress" => $total_caja_egress,
+                "my_sell" => $self_sell,
+                "total_users" => $total_sells_for_user,
+                "self_id" => $self_id
+            ])->render();
+
             return response()->json(["status" => true, "html" => $render]);
-
         }
+    }
 
 
+    public function optionalHistorySell(Request $request)
+    {
+
+
+        $cost = $request->cost;
+        $date = $request->date;
+        $option = $request->option;
+        $id_sell = $request->id_sell;
+
+        $optional = ["delete", "modify", "revert"];
+
+        if (in_array($option, $optional)) {
+
+
+            $return_optional = '';
+
+            switch ($option) {
+
+                case 'delete':
+                    $delete = modelSell::deleteSell($id_sell);
+                    $return_optional = "Eliminar";
+
+                    break;
+
+                case 'modify':
+
+                    if (isset($cost)) $modifySell =  modelSell::modifySellCost($id_sell, $cost);
+
+
+
+                    if (isset($date)) $modyfyDate = modelSell::modifyDate($id_sell, $date);
+
+                    $return_optional = "modificar";
+
+                    break;
+
+                case 'revert':
+                    $delete = modelSell::deleteSell($id_sell);
+                    $return_optional = "Revertir";
+
+                    break;
+                default:
+                    # code...
+                    break;
+            }
+        }
     }
 }

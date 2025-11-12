@@ -195,6 +195,7 @@ Route::post('/rango-cocina', [kitchenController::class, 'getRange'])->name("rang
 
 Route::match(['GET', 'POST'], '/webhook', [chatBotController::class, 'chatBot']);
 
+Route::post('/opcion-historialventas', [historySellController::class, 'getRange'])->name("optionalHistorySell")->middleware(["verifyTokenHeader"]);
 
 
 

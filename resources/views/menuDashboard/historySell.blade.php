@@ -1,6 +1,6 @@
 <div class="d-flex justify-contente-center">
 
-    @if ($permisos === 'history_sell')
+    @if ($permisos === 'history_sell' || $permisos === 'history_sell.full')
         <div class="form-group d-flex">
             <div>
 
@@ -61,6 +61,9 @@
                             <thead class="thead-dark">
                                 <tr>
                                     <th scope="col">#</th>
+                                    @if ($permisos === 'history_sell.full')
+                                        <th>Editar</th>
+                                    @endif
                                     <th scope="col">Representación</th>
                                     <th scope="col">Producto</th>
                                     <th scope="col">Descripción Producto</th>
@@ -81,6 +84,12 @@
                                 @foreach ($historial as $item)
                                     <tr>
                                         <th scope="row">{{ $flagg }}</th>
+                                        @if ($permisos === 'history_sell.full')
+                                            <td><button
+                                                    onclick="changeModalHistorySell('{{ $item['nombre_producto_venta'] }}', '{{ $item['id_venta'] }}')"
+                                                    class="btn btn-success"><i
+                                                        class="fa-solid fa-pen-to-square"></i></button></td>
+                                        @endif
                                         <td><img src="{{ $item['url_imagen'] }}"
                                                 alt="Representación de {{ $item['nombre_producto_venta'] }}"
                                                 width="40" height="40"></td>
@@ -91,7 +100,9 @@
                                         <td>{{ $item['id_user_cajero'] }}</td>
                                         <td>{{ $item['hora'] }}</td>
                                         <td>{{ $item['fecha'] }}</td>
-                                        <td><i class="fa-solid fa-dollar-sign text-success"></i>&nbsp;&nbsp;{{ number_format($item['total_venta'], 0, '', '.') }}</td>
+                                        <td><i
+                                                class="fa-solid fa-dollar-sign text-success"></i>&nbsp;&nbsp;{{ number_format($item['total_venta'], 0, '', '.') }}
+                                        </td>
                                     </tr>
 
                                     @php
@@ -121,7 +132,7 @@
                     </center>
 
 
-                    @if ($permisos === 'history_sell')
+                    @if ($permisos === 'history_sell' || $permisos === 'history_sell.full')
 
                         <div class="table-responsive">
                             <table class="table">
@@ -146,11 +157,11 @@
                                             </td>
                                             <td>
                                                 <h4>&nbsp;&nbsp;{{ $item['nombre'] }}
-                                                    </h4>
+                                                </h4>
                                             </td>
                                             <td>
                                                 <h4>&nbsp;&nbsp;{{ $item['apellido'] }}
-                                                    </h4>
+                                                </h4>
                                             </td>
 
                                             <td>
@@ -362,6 +373,54 @@
 
         </div>
     </div>
+
+
+    @if ($permisos === 'history_sell.full')
+        <!-- Modal -->
+        <div class="modal fade" id="modify_sell" data-idventa="" tabindex="-1" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-info">
+                        <h5 class="modal-title " id="tittle_modal_history"></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="form-group">
+                            <label for="edit_price">Modificar costo de venta:</label>
+                            <input type="number" class="form-control" id="edit_cost_sell"
+                                placeholder="Modificar Costo venta $..." autocomplete="off" name="edit_cost_sell">
+                        </div>
+
+                        <div>
+
+                            <label>Fecha:</label>
+                            <div class="input-group date" data-target-input="nearest">
+                                <input type="date" class="form-control" data-target="#reservationdate"
+                                    id="date_change_sell">
+                                <div class="input-group-append" data-target="#reservationdate"
+                                    data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-warning" data-dismiss="modal"><i
+                                class="fa-solid fa-backward"></i>&nbsp;&nbsp;Revertir venta</button>
+                        <button type="button" class="btn btn-info" data-dismiss="modal"><i
+                                class="fa-solid fa-pen-to-square"></i>&nbsp;&nbsp;Modificar venta</button>
+                        <button type="button" class="btn btn-danger"><i
+                                class="fa-solid fa-trash"></i>&nbsp;&nbsp;Eliminar Venta</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
     <!-- /.card -->
 </div>
 </div>

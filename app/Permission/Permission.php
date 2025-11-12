@@ -35,8 +35,8 @@ class Permission
 
         // 📊 Historial
         'history_sell',             // Historial general de ventas
-        'history_sell.searcher',    // Buscador en el historial en el tiempo por fechas
-
+        'history_sell.searcher',
+        'history_sell.full',
         // 🍽️ Alimentación de empleados
         'employee_food',            // Módulo de alimentación
         'employee_food.searcher',   // Buscador en alimentación

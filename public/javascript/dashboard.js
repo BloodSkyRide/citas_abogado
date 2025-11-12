@@ -3454,6 +3454,64 @@ async function discountFoodEmployee(url) {
     }
 }
 
+
+async function optionalHistorySell(option, url){
+
+    let cost_change = document.getElementById("edit_cost_sell");
+    let date_change = document.getElementById("date_change_sell");
+
+    let token = localStorage.getItem("access_token");
+
+    let id_sell = document.getElementById("modify_sell").dataset;
+
+    let response = await fetch(url,{
+
+        method: "POST",
+        headers: {
+
+            "Content_type": "application/json",
+            "Authorization": `Bearer ${token}`
+        },
+
+        body: JSON.stringify({
+
+            cost: cost_change.value,
+            date: date_change.value,
+            id_sell: id_sell,
+            option: option
+        })
+
+    })
+
+
+    let data = response.json();
+
+
+    if(data.status){
+
+
+
+
+
+
+    }
+
+
+}
+
+
+function changeModalHistorySell(name_product,id_venta){
+
+
+    $("#modify_sell").modal("show");
+
+    let tittle_modal_history = document.getElementById("tittle_modal_history");
+
+    tittle_modal_history.textContent = `Modificar venta de ${name_product}`;
+
+    document.getElementById("modify_sell").dataset.dataIdventa = id_venta;
+}
+
 async function openModalInfo(id_item, info_tittle, url) {
     let titulo_modal = document.getElementById("titulo_modal");
 

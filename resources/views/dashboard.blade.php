@@ -218,7 +218,7 @@
                                 </a>
                             </li>
                         @endif
-                        @if (in_array('history_sell', $array['permisos']) || in_array('history_sell.searcher', $array['permisos']))
+                        @if (in_array('history_sell', $array['permisos']) || in_array('history_sell.searcher', $array['permisos']) || in_array('history_sell.full', $array['permisos']))
                             <li class="nav-item">
                                 <a class="nav-link menu_dashboard"
                                     onclick="getShowHistorySell('{{ route('getShowHistorySell') }}')" type="button"

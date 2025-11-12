@@ -160,4 +160,26 @@ class modelSell extends Model
         ->pluck("id_user_cajero");
 
     }
+
+    public static function deleteSell($id_sell){
+
+        return self::where("id_venta", $id_sell)
+        ->delete();
+
+    }
+
+    public static function modifySellCost($id_sell, $total_sell){
+
+
+        return self::where("id_venta", $id_sell)
+        ->update(["total_venta" => $total_sell]);
+    }
+
+
+    public static function modifyDate($id_sell, $date){
+
+
+        return self::where("id_venta", $id_sell)
+        ->update(["fecha" => $date]);
+    }
 }
