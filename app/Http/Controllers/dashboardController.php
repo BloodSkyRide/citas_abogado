@@ -152,7 +152,7 @@ class dashboardController extends Controller
                     break;
                     
                 case 'super admin':
-                    $permisos = "register_users,manage_users,contability,change_password,kitchen,schedules,payrol,inventory,product_seller,history_sell,employee_food,transfer,hotel,store,order_cocina";
+                    $permisos = "register_users,manage_users,contability,change_password,kitchen,schedules,payrol,inventory,product_seller,history_sell.full,employee_food,transfer,hotel,store,order_cocina";
                     break;    
                 
                 default:

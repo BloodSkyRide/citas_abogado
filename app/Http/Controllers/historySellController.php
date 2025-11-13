@@ -9,6 +9,9 @@ use App\Models\modelEgress;
 use App\Models\modelUser;
 use Carbon\Carbon;
 use App\Http\Controllers\dashboardController;
+use App\Models\modelCompuesto;
+use App\Models\modelInventario;
+use App\Models\modelProducts;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Permission\Permission;
 
@@ -162,7 +165,7 @@ class historySellController extends Controller
         $verify_permissions = Permission::verifyPermission("history_sell", $permissions);
 
 
-        if ($verify_permissions == "history_sell") {
+        if ($verify_permissions == "history_sell" || $verify_permissions == "history_sell.full") {
 
 
             $total_sells_for_user = self::getCashPerson($today);
@@ -189,14 +192,13 @@ class historySellController extends Controller
     public function optionalHistorySell(Request $request)
     {
 
-
         $cost = $request->cost;
         $date = $request->date;
         $option = $request->option;
         $id_sell = $request->id_sell;
 
         $optional = ["delete", "modify", "revert"];
-
+        
         if (in_array($option, $optional)) {
 
 
@@ -223,14 +225,52 @@ class historySellController extends Controller
                     break;
 
                 case 'revert':
-                    $delete = modelSell::deleteSell($id_sell);
-                    $return_optional = "Revertir";
+                    $revert = self::revertSell($id_sell);
+
+                    if($revert){
+                        
+                        $delete = modelSell::deleteSell($id_sell);
+                        $return_optional = "Revertir";
+                    }
 
                     break;
+
                 default:
-                    # code...
-                    break;
+                    
+                break;
             }
         }
+        return response()->json(["status" =>  true, "option" => $return_optional]);
+    }
+
+
+
+    private function revertSell($id_sell){
+
+        $get_sell = modelSell::getIdProductSeller($id_sell);
+
+        $id_product_seller = $get_sell->id_producto_venta;
+
+        $less_unit = $get_sell->unidades_venta;
+
+        $get_compounds = modelCompuesto::getComposed($id_product_seller);
+
+        $flagg = 0;
+        foreach ($get_compounds as $item) {
+            
+            $id_item_fk = $item['id_item_fk'];
+            $discounts = $item['descuento'];
+
+            $total_sum = $discounts * $less_unit;
+
+            $sum_revert_inventory = modelInventario::sumRevert($id_item_fk, $total_sum);
+
+            if($sum_revert_inventory)$flagg++;
+
+        }
+
+        if($flagg == count($get_compounds)) return true;
+
+
     }
 }

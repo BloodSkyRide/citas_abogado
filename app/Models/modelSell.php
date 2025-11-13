@@ -182,4 +182,12 @@ class modelSell extends Model
         return self::where("id_venta", $id_sell)
         ->update(["fecha" => $date]);
     }
+
+        public static function getIdProductSeller($id_sell){
+
+
+        return self::where("id_venta", $id_sell)
+        ->first();
+
+    }
 }

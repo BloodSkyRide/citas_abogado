@@ -377,7 +377,7 @@
 
     @if ($permisos === 'history_sell.full')
         <!-- Modal -->
-        <div class="modal fade" id="modify_sell" data-idventa="" tabindex="-1" aria-labelledby="exampleModalLabel"
+        <div class="modal fade" id="modify_sell" tabindex="-1" aria-labelledby="exampleModalLabel"
             aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -410,12 +410,9 @@
 
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-warning" data-dismiss="modal"><i
-                                class="fa-solid fa-backward"></i>&nbsp;&nbsp;Revertir venta</button>
-                        <button type="button" class="btn btn-info" data-dismiss="modal"><i
-                                class="fa-solid fa-pen-to-square"></i>&nbsp;&nbsp;Modificar venta</button>
-                        <button type="button" class="btn btn-danger"><i
-                                class="fa-solid fa-trash"></i>&nbsp;&nbsp;Eliminar Venta</button>
+                        <button  onclick="optionalHistorySell('revert','{{route('optionalHistorySell')}}')" type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa-solid fa-backward"></i>&nbsp;&nbsp;Revertir venta</button>
+                        <button  onclick="optionalHistorySell('modify','{{route('optionalHistorySell')}}')" type="button" class="btn btn-info" data-dismiss="modal"><i class="fa-solid fa-pen-to-square"></i>&nbsp;&nbsp;Modificar venta</button>
+                        <button  onclick="optionalHistorySell('delete','{{route('optionalHistorySell')}}')" type="button" class="btn btn-danger"><i class="fa-solid fa-trash"></i>&nbsp;&nbsp;Eliminar Venta</button>
                     </div>
                 </div>
             </div>

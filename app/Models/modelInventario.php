@@ -118,5 +118,13 @@ class modelInventario extends Model
         ->exists();
 
     }
+
+
+    public static function sumRevert($id_item, $units){
+
+        return self::where("id_item", $id_item)
+        ->increment('unidades_disponibles', $units);
+
+    }
     
 }

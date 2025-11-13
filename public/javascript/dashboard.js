@@ -45,7 +45,7 @@ echo.channel("realtime-channel") // El nombre del canal debe coincidir con lo qu
         let role = document.getElementById("role_h1").textContent;
         let get_permission = await verifyUser();
 
-        if ( (get_permission == "order_cocina" ) && data.tipo === "pedido") {
+        if (get_permission == "order_cocina" && data.tipo === "pedido") {
             await hablar(
                 `Tienes un pedido nuevo: ${data.amount} ${data.name_product} y porfavor ${data.description}`
             );
@@ -88,7 +88,10 @@ echo.channel("realtime-channel") // El nombre del canal debe coincidir con lo qu
                     $("#custom-toast-container").append($toast);
                 }
             }, 150);
-        } else if (get_permission !== "order_cocina" && data.tipo === "devolucion") {
+        } else if (
+            get_permission !== "order_cocina" &&
+            data.tipo === "devolucion"
+        ) {
             playNotificationSound2();
 
             $(document).Toasts("create", {
@@ -118,8 +121,8 @@ async function hablar(texto) {
 
         // Busca una voz española disponible
         const vozDisponible =
-            voces.find(v => v.lang.startsWith("es")) ||
-            voces.find(v => v.name.toLowerCase().includes("google")) ||
+            voces.find((v) => v.lang.startsWith("es")) ||
+            voces.find((v) => v.name.toLowerCase().includes("google")) ||
             voces[0]; // fallback
 
         if (vozDisponible) {
@@ -1242,9 +1245,7 @@ async function openModalUser(cedula, url) {
 
         select.empty();
         data.establecidos.forEach((op) => {
-
-
-            const existe = data.permisos.some((per) => op.includes(per+'.'));
+            const existe = data.permisos.some((per) => op.includes(per + "."));
 
             if (!existe) {
                 select.append(new Option(op, op, false, false));
@@ -3454,62 +3455,58 @@ async function discountFoodEmployee(url) {
     }
 }
 
-
-async function optionalHistorySell(option, url){
-
+async function optionalHistorySell(option, url) {
     let cost_change = document.getElementById("edit_cost_sell");
     let date_change = document.getElementById("date_change_sell");
 
     let token = localStorage.getItem("access_token");
 
-    let id_sell = document.getElementById("modify_sell").dataset;
+    let id_sell = document.getElementById("modify_sell").dataset.idventa;
 
-    let response = await fetch(url,{
+    console.log("vea parce el id es: " + id_sell);
 
+    let response = await fetch(url, {
         method: "POST",
         headers: {
-
-            "Content_type": "application/json",
-            "Authorization": `Bearer ${token}`
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
         },
 
         body: JSON.stringify({
-
             cost: cost_change.value,
             date: date_change.value,
             id_sell: id_sell,
-            option: option
-        })
+            option: option,
+        }),
+    });
 
-    })
+    let data = await response.json();
 
+    if (data.status) {
+        $("#modal_sell").modal("hide");
 
-    let data = response.json();
+        var Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 6000,
+        });
 
-
-    if(data.status){
-
-
-
-
-
-
+        Toast.fire({
+            icon: "success",
+            title: `Tu operación ${data.option} fue realizada con éxito!`,
+        });
     }
-
-
 }
 
-
-function changeModalHistorySell(name_product,id_venta){
-
-
+function changeModalHistorySell(name_product, id_venta) {
     $("#modify_sell").modal("show");
 
     let tittle_modal_history = document.getElementById("tittle_modal_history");
 
     tittle_modal_history.textContent = `Modificar venta de ${name_product}`;
 
-    document.getElementById("modify_sell").dataset.dataIdventa = id_venta;
+    document.getElementById("modify_sell").dataset.idventa = id_venta;
 }
 
 async function openModalInfo(id_item, info_tittle, url) {
@@ -3548,12 +3545,14 @@ async function openModalInfo(id_item, info_tittle, url) {
 
         productos_compuestos.forEach((item) => {
             body_table.innerHTML += `<td><center>${item.nombre_compuesto}</center></td>
-            <td><center>${item.descuento}</center></td>`
+            <td><center>${item.descuento}</center></td>`;
         });
 
-        document.getElementById("type_product_tittle").innerHTML = `Tipo de producto: ${data.type_product}`;
+        document.getElementById(
+            "type_product_tittle"
+        ).innerHTML = `Tipo de producto: ${data.type_product}`;
 
-        console.log("prueba: "+data.type_product)
+        console.log("prueba: " + data.type_product);
 
         $("#modal_info").modal("show");
     }

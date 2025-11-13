@@ -151,18 +151,19 @@ class inventoryController extends Controller
         } else return 0;
 
 
-
+        $flagg = 0;
         foreach ($array_ids as $item) {
-
-
+            
+            
             $verify_category = modelProducts::verifyCategory($item['id_producto_venta']);
-
-            if (isset($verify_category->categoria) && $verify_category->categoria == "tienda" && $verify_category->tipo_producto === "unitario") {
-                return (!isset($verify_category->precio)) ? 0 : $verify_category->precio;
+            
+            if (isset($verify_category->categoria) && $verify_category->categoria == "tienda" && $verify_category->tipo_producto == "unitario") {
+                $flagg++;
+                 return (!isset($verify_category->precio)) ? 0 : $verify_category->precio;
             }
         }
-
-        return 0;
+        
+        dd($flagg);
     }
 
 
