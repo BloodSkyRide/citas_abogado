@@ -163,7 +163,7 @@ class inventoryController extends Controller
             }
         }
         
-        dd($flagg);
+
     }
 
 
