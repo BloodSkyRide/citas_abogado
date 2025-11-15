@@ -18,7 +18,7 @@
 
     <link rel="stylesheet" href="{{ asset('javascript/plugins/sweetalert2/sweetalert2.min.css') }}">
 
-    <title>Intranet Parador Rapi</title>
+    <title>Intranet Julian´s Asociados</title>
 </head>
 
 <body class="body">
@@ -35,7 +35,7 @@
             <div class="card-body login-card-body">
 
                 <center><b>
-                        <h3 class="title_intranet">Intranet Parador rapi</h3>
+                        <h3 class="title_intranet">Intranet Julian´s Asociados</h3>
                 </center>
 
                 <center>
